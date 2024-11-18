@@ -11,3 +11,4 @@ if 1==1:
     print ("Ryan was here to test it out!")
     print('bye')
     b.a()
+print('b')
