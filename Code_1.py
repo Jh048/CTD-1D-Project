@@ -16,7 +16,7 @@ print('b')
 
 def start():
     user_enters = input('Welcome to Porotimer! What is your name?') 
-    print ('welcome', user_enters)
+    print ('Welcome to Porotimer', user_enters, '!')
 
 
 start()
