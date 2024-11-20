@@ -1,4 +1,4 @@
-import ai
+import fun.ai as ai
 print('hello')
 print ("poo.py")
 print('abc')
