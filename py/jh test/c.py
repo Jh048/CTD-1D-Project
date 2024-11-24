@@ -60,7 +60,7 @@ def timer(minutes):
     # Start the input listener thread
     listener_thread = threading.Thread(target=input_listener, daemon=True)
     listener_thread.start()
-    countdown()
+    countdown(minutes)
 
     sys.stdout.write("\rCountdown: Time's up!          \n")
 timer(25)
