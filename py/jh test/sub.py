@@ -68,14 +68,15 @@ def custom_countdown():
         # Use '\r' to overwrite the line
         # sys.stdout.write: Prints the text without adding a newline (\n).
         
-        sys.stdout.write(f"\rRemaining time: {time_string}")
-        sys.stdout.write("\033[K")
+        sys.stdout.write(f"\rRemaining time: {time_string} | Press 'p' to pause: ")
+        #sys.stdout.write("\033[K")
         # sys.stdout.write: Prints the text without adding a newline (\n).
         sys.stdout.flush()
+        
         # time.sleep: Waits for 1 second between each update.
         time.sleep(1)
     sys.stdout.write("\rCountdown: Times up!          \n")
-
+custom_countdown()
 #=======================================================================================
 import time
 import sys
@@ -114,4 +115,4 @@ def timer(minutes):
     sys.stdout.write("\rCountdown: Time's up!          \n")
 
 # Example usage
-timer(25)
+#timer(25)
