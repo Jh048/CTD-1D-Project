@@ -150,4 +150,10 @@ def timer(*args):
 # Example 1: timer(5) will start a 5-second countdown
 # Example 2: timer(2, 5) will start a 2-minute 5-second countdown
 # Example 3: timer(1, 0, 5) will start a 1-hour 0-minute 5-second countdown
+# Example 4: timer() will ask the user for input
+''' Example 5:
+if using timer() in another file under the same folder
+can import timer as t
+t.timer() to sue i another file'''
+
 # timer()  # Example of calling the function with hours, minutes, and seconds
