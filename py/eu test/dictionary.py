@@ -1,7 +1,15 @@
-import timer as t
-t.timer(5 , 5)
+import sys
+import os
 
-# def dictionary():
+# Add the parent folder (CTD 1D CODE) to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
+# Import the timer function from Timer.py
+from timer import timer  # Match the exact name of Timer.py (case-sensitive)
+
+# Use the timer function
+print("Calling timer() from Timer.py")
+timer(5)  # Example: Starts a 5-second timer
 
 """
 create session: open code, make new list within dictionary
