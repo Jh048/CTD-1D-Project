@@ -1,0 +1,8 @@
+def total_time():
+
+# Dictionary to store categories and their respective durations (in minutes)
+timer_categories = {
+    'work': ,  # Work session duration (in minutes)
+    'study': ,  # Study session duration (in minutes)
+    'break': ,  # Break session duration (in minutes)
+}
