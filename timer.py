@@ -86,7 +86,7 @@ def timer(*args):
                 hours, mins = divmod(mins, 60)
                 # Uses divmod to convert seconds into hours, minutes, and seconds.
 
-                print(f"\rRemaining time: {hours:02}:{mins:02}:{secs:02} | Press 'p' to pause: ", end="")
+                print(f"\rRemaining time: {hours:02}:{mins:02}:{secs:02} | Press 'p' to pause, Press 'q' to quit: ",end="")
                 # Updates the display using \r (carriage return) to overwrite the previous output.
 
                 time.sleep(1)
@@ -97,7 +97,7 @@ def timer(*args):
                 mins, secs = divmod(paused_time, 60)
                 hours, mins = divmod(mins, 60)
 
-                print(f"\rPause time: {hours:02}:{mins:02}:{secs:02} | Press 'r' to resume:", end="")
+                print(f"\rPause time: {hours:02}:{mins:02}:{secs:02} | Press 'r' to resume, Press 'q' to quit:", end="")
                 paused_time += 1
                 time.sleep(1)
                 

@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 # Import the timer function from Timer.py
-from timer import timer  # Match the exact name of Timer.py (case-sensitive)
+from timer import timer, timer_data # Match the exact name of Timer.py (case-sensitive)
 
 # Use the timer function
 #print("Calling timer() from Timer.py")
