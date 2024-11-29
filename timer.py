@@ -5,10 +5,11 @@ import copy
 timer_data = []
 user_input = None
 quit_flag = threading.Event()  # Global quit flag to control exit
+elapsed_time = 0
 
 def timer(*args):
 # The timer function accepts an optional set of arguments representing the time in hours, minutes, and seconds.
-    global timer_data, user_input, quit_flag
+    global timer_data, user_input, quit_flag, elapsed_time
 
     if not args:
     # If no arguments are passed, the function prompts the user to enter a countdown time in the format HH,MM,SS

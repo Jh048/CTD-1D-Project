@@ -117,4 +117,4 @@ def run_timer(*args):
 # run_timer(2, 25)      # 2 minutes, 25 seconds
 # run_timer(1, 0, 5)    # 1 hour, 0 minutes, 5 seconds
 # run_timer()           # Prompt user for input
-run_timer(5)
+run_timer()
