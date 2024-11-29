@@ -11,7 +11,7 @@ Do you want to start a timer?
 ----------------------------
 """
 
-menu3 = """                     #yes was entered at menu2
+menu3 = """                    
 --------------------------
 What are we doing today?
 eg. Study, Work etc
