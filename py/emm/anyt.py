@@ -14,7 +14,6 @@ from timer import timer  # Match the exact name of Timer.py (case-sensitive)
 Start_or_archieve = input('Do you want to start a timer?(Y/N)'). upper ()
 if Start_or_archieve == 'Y':
     Title = input ("YES was entered. What are we doing today?")
-    Duration = input (f" How long do you want to {Title} for?")
     #timer function
     timer()
 else:
