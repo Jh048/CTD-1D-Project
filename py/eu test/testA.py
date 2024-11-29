@@ -13,7 +13,7 @@ def start_or_archive():
     Start_or_archieve = input('Do you want to start a timer?(Y/N)'). upper ()
     if Start_or_archieve == 'Y':
         Title = input ("YES was entered. What are we doing today?")
-        timer()
+        # timer()
     else:
         Archieve= input ('Do you want to look at your history?(Y/N)') .upper()
         if Archieve == 'Y':
