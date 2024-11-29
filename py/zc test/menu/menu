@@ -1,4 +1,4 @@
 menu1 = '''
 Welcome to Pomodoro timer!!!
-
 '''
+print
