@@ -208,4 +208,8 @@ if using timer() in another file under the same folder
 can import timer as t
 t.timer() to use i another file'''
 
-timer()  # Example of calling the function with hours, minutes, and seconds
+  # Example of calling the function with hours, minutes, and seconds
+# Main entry point
+
+if __name__ == "__main__":
+    timer()
