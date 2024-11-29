@@ -1,10 +1,7 @@
-menu1 ="""
---------------
-Do you want to start a timer?
-(Y)Yes
-(N)No
-----------------------------
-"""
+menu1 = '''
+Welcome to Pomodoro timer!!!
+'''
+
 
 menu2 ="""
 --------------
