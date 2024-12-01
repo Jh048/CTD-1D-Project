@@ -77,7 +77,7 @@ def timer(*args):
 
     def display_timer():
         
-        nonlocal remaining_time, paused_time, pause_count, resume_count
+        nonlocal remaining_time, paused_time, pause_count, resume_count, original_total_time
         while remaining_time > 0:
             if quit_flag.is_set(): # If quit flag is set, break out of the loop
                 break
@@ -115,7 +115,7 @@ def timer(*args):
             paused_time_str = f"{hours:02}:{mins:02}:{secs:02}" if hours > 0 else f"{mins:02}:{secs:02}"
             # Displays the total time the timer was paused.
             
-            elapsed_time = original_total_time - remaining_time
+            elapsed_time = original_total_time
             elapsed_mins, elapsed_secs = divmod(elapsed_time, 60)
             elapsed_hours, elapsed_mins = divmod(elapsed_mins, 60)
             elapsed_time_str = f"{elapsed_hours:02}:{elapsed_mins:02}:{elapsed_secs:02}" if hours > 0 else f"{mins:02}:{secs:02}"
@@ -193,9 +193,11 @@ def timer(*args):
 
     timer_thread.join()
     input_thread.join()
-    print(timer_data)
+    
     print(total_pause_time_list)
-
+    print(total_pause_time)
+    print(elapsed_time)
+    print(timer_data)
 
     
 # Start the timer
