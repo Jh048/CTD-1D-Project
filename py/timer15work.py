@@ -2,11 +2,10 @@ import time # Used to manage delays and countdown timing in seconds.
 import threading # Enables concurrent execution of code (to run the timer and handle user inputs simultaneously).
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
-import menu as m
 
 
 
-timer_data = []
+title = []
 user_input = None
 quit_flag = threading.Event()  # Global quit flag to control exit
 elapsed_time = 0
@@ -25,7 +24,7 @@ def secs_to_clock(sec):
 
 def timer(*args):
 # The timer function accepts an optional set of arguments representing the time in hours, minutes, and seconds.
-    global timer_data, user_input, quit_flag, elapsed_time
+    global title, user_input, quit_flag, elapsed_time
     if not args:
     # If no arguments are passed, the function prompts the user to enter a countdown time in the format HH,MM,SS
 
@@ -134,7 +133,8 @@ def timer(*args):
             elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
 
             # Store details in the global list
-            timer_data.append({
+            
+            title.append({
                 "elapsed_time": elapsed_time_str,
                 "paused_time": paused_time_str
             })
@@ -179,7 +179,7 @@ def timer(*args):
 
 
                 # Store details in the global list
-                timer_data.append({
+                title.append({
                     "Elapsed_time": elapsed_time_str,
                     "Total_paused_time": paused_time_str
                 })
@@ -226,8 +226,8 @@ t.timer() to use i another file'''
 
 
 #=========================================================================================================
-def a():
-    print(m.menu1)
+# def a():
+#     print(m.menu1)
 
 def start_or_archive():
     global title
@@ -237,15 +237,21 @@ def start_or_archive():
         if title== "study":
             #default timer for study
             print (f'You have chosen {title}')
+            archive_dict[title] = []
+            timer()
         elif title == "work":
             #default for study
             print (f'You have chosen {title}')
+            archive_dict[title] = []
+            timer()
         elif title == "others":
             other_activity= input ("What do you want to do today?") .lower()
             #ask for duration function
             print (f'You have chosen {other_activity}')
+            archive_dict[title] = []
+            timer()
         else:
-            print (invalid)
+            print ("invalid")
         
         # print(f"working session: {title}")
         
@@ -261,22 +267,23 @@ def start_or_archive():
     else:
         print ('invalid')
 
-
+# def view_archive():
+#     title = input ("Input name of the activty to view") .lower()
 
 
 
 def data():
-    global timer_data
-    # Ensure timer_data has entries before processing
-    if not timer_data:
+    global title
+    # Ensure title has entries before processing
+    if not title:
         print("No data available.")
         return None
 
-    # Extract elapsed and paused times from timer_data
+    # Extract elapsed and paused times from title
     study_times = []  # For elapsed work session times
     break_times = []  # For total paused times
 
-    for entry in timer_data:
+    for entry in title:
         # Convert the "elapsed_time" and "paused_time" strings to total minutes
         elapsed_time = entry.get("elapsed_time", "00:00:00")
         paused_time = entry.get("paused_time", "00:00:00")
@@ -293,5 +300,4 @@ def data():
     return pomodoro_data
 
 if __name__ == "__main__":
-    timer()
-
+    start_or_archive()
