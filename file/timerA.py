@@ -2,6 +2,7 @@ import time # Used to manage delays and countdown timing in seconds.
 import threading # Enables concurrent execution of code (to run the timer and handle user inputs simultaneously).
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
+import menu as m
 
 
 
@@ -18,6 +19,9 @@ def secs_to_clock(sec):
     hours, mins = divmod(mins, 60)
     return f"{hours:02}:{mins:02}:{secs:02}"
 
+#=========================================================================================================
+
+
 # If arguments are passed directly (args), the function parses them similarly to user input.
 def args(args):
     if len(args) == 1:
@@ -30,6 +34,9 @@ def args(args):
         print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
         print("Invalid time format. Ensure time is in the).")
         return
+
+
+#=========================================================================================================
 
 
 def timer(*args):
@@ -192,10 +199,6 @@ def timer(*args):
                 time.sleep(1)
                 break
 
-        
-            
-
-
     timer_thread = threading.Thread(target=display_timer, daemon=True)
     # Displays the countdown.
     input_thread = threading.Thread(target=input_listener, daemon=True)
@@ -226,6 +229,11 @@ t.timer() to use i another file'''
 
   # Example of calling the function with hours, minutes, and seconds
 # Main entry point
+
+
+#=========================================================================================================
+def a():
+    print(m.menu1)
 
 def start_or_archive():
     global title
