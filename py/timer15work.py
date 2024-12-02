@@ -277,16 +277,3 @@ def data():
 if __name__ == "__main__":
     start_or_archive()
 
-def data():# Example dictionary with study times for different sessions
-    pomodoro_data = {
-        'study': [25, 25, 25, 25],  # List of study (work) session durations in minutes
-        'break': [5, 5, 5, 15]      # List of break durations in minutes (short or long breaks)
-    }
-
-# Sum the study (work) times
-    total_study_time = sum(pomodoro_data['study'])
-
-    return total_study_time
-# Print the result
-info = data()
-print(f"Total study (work) time: {info} minutes")
