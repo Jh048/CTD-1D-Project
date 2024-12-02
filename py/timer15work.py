@@ -229,20 +229,22 @@ t.timer() to use i another file'''
 
 def start_or_archive():
     global title
-    Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
-    if Start_or_archieve == 'y':
-        title = input ("YES was entered. What are we doing today?: ")
-        # print(f"working session: {title}")
-        timer()
-    else:
-        Archieve= input ('Do you want to look at your history?(y/n): ').lower()
-        if Archieve == 'y':
-            print ('Loading History..........')
-            #Histroy function
-        elif Archieve == 'n':
-            print ('Bye! Have a great day!')
+    while True:
+        Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
+        if Start_or_archieve == 'y':
+            title = input ("YES was entered. What are we doing today?: ")
+            # print(f"working session: {title}")
+            timer()
         else:
-            print("incorrct input, please try again")
+            Archieve= input ('Do you want to look at your history?(y/n): ').lower()
+            if Archieve == 'y':
+                #Histroy function
+                data()
+            elif Archieve == 'n':
+                print ('Bye! Have a great day!')
+                break
+            else:
+                print("incorrct input, please try again")
 
 
 
