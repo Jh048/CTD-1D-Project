@@ -2,7 +2,7 @@ import time # Used to manage delays and countdown timing in seconds.
 import threading # Enables concurrent execution of code (to run the timer and handle user inputs simultaneously).
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
-import os
+
 
 
 timer_data = []
@@ -180,8 +180,8 @@ def timer(*args):
 
                 # Store details in the global list
                 timer_data.append({
-                    "elapsed_time": elapsed_time_str,
-                    "Total paused_time": paused_time_str
+                    "Elapsed_time": elapsed_time_str,
+                    "Total_paused_time": paused_time_str
                 })
 
                 # Display summary
@@ -243,6 +243,36 @@ def start_or_archive():
             print ('Bye! Have a great day!')
         else:
             print("incorrct input, please try again")
+
+
+
+
+def data():
+    global timer_data
+    # Ensure timer_data has entries before processing
+    if not timer_data:
+        print("No data available.")
+        return None
+
+    # Extract elapsed and paused times from timer_data
+    study_times = []  # For elapsed work session times
+    break_times = []  # For total paused times
+
+    for entry in timer_data:
+        # Convert the "elapsed_time" and "paused_time" strings to total minutes
+        elapsed_time = entry.get("elapsed_time", "00:00:00")
+        paused_time = entry.get("paused_time", "00:00:00")
+
+        study_times.append(secs_to_clock(elapsed_time))
+        break_times.append(secs_to_clock(paused_time))
+
+    # Build the dictionary with the summed data
+    pomodoro_data = {
+        'study': sum(study_times),  # Total study time in minutes
+        'break': sum(break_times)  # Total break time in minutes
+    }
+
+    return pomodoro_data
 
 if __name__ == "__main__":
     start_or_archive()
