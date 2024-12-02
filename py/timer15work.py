@@ -237,17 +237,22 @@ def start_or_archive():
             #default timer for study
             print (f'You have chosen {title}')
             archive_dict[title] = []
+            timer()
         elif title == "work":
             #default for study
             print (f'You have chosen {title}')
             archive_dict[title] = []
+            timer()
         elif title == "others":
             other_activity= input ("What do you want to do today?") .lower()
             #ask for duration function
             print (f'You have chosen {other_activity}')
             archive_dict[title] = []
+            timer()
         else:
             print ("invalid")
+        
+
     
         
         # print(f"working session: {title}")
