@@ -231,8 +231,8 @@ t.timer() to use i another file'''
 
 def start_or_archive():
     global title
-    Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
-    if Start_or_archieve == 'y':
+    Start_or_archive = input('Do you want to start a timer?(y/n): ').lower()
+    if Start_or_archive == 'y':
         title = input ("Do you want to study, work or others?") .lower()
         if title== "study":
             #default timer for study
@@ -250,20 +250,18 @@ def start_or_archive():
             print (f'You have chosen {other_activity}')
             archive_dict[title] = []
             timer()
-        else:
-            print ("invalid")
         
 
     
         
         # print(f"working session: {title}")
         
-    elif title=='n':
-        Archieve= input ('Do you want to look at your history?(y/n): ').lower()
-        if Archieve == 'y':
-            print ('Loading History..........')
+    elif Start_or_archive =='n':
+        Archive= input ('Do you want to look at your history?(y/n): ').lower()
+        if Archive == 'y':
+            view_archive()
             #Histroy function
-        elif Archieve == 'n':
+        elif Archive == 'n':
             print ('Bye! Have a great day!')
         else:
             print("incorrct input, please try again")
@@ -271,6 +269,8 @@ def start_or_archive():
         print ('invalid')
 
 
+def view_archive():
+    return archive_dict
 
 
 
