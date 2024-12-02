@@ -13,8 +13,17 @@ Do you want to start a timer?
 
 menu3 = """                    
 --------------------------
-What are we doing today?
-eg. Study, Work etc
+Do you want to study,work or others?
+study
+work
+others
+--------------------------
+"""
+menu4 = """                    
+--------------------------
+"What do you want to do today?"
+cooking, meditation, etc
+
 --------------------------
 """
 menu5 = """
