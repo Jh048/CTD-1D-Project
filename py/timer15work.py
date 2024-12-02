@@ -5,7 +5,7 @@ import copy
 
 
 
-timer_data = []
+title = []
 user_input = None
 quit_flag = threading.Event()  # Global quit flag to control exit
 elapsed_time = 0
@@ -231,19 +231,23 @@ def start_or_archive():
     global title
     Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
     if Start_or_archieve == 'y':
-        title = input ("Do you want to study,work or others?") .lower()
+        title = input ("Do you want to study, work or others?") .lower()
         if title== "study":
             #default timer for study
             print (f'You have chosen {title}')
+            archive_dict[title] = []
         elif title == "work":
             #default for study
             print (f'You have chosen {title}')
+            archive_dict[title] = []
         elif title == "others":
             other_activity= input ("What do you want to do today?") .lower()
             #ask for duration function
             print (f'You have chosen {other_activity}')
+            archive_dict[title] = []
         else:
-            print (invalid)
+            print ("invalid")
+    
         
         # print(f"working session: {title}")
         
