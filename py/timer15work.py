@@ -213,6 +213,7 @@ def timer(*args):
     print(total_pause_time)
     print(elapsed_time)
     print(title)
+    print(archive_dict)
 
     
 # Start the timer
