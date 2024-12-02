@@ -12,6 +12,25 @@ elapsed_time = 0
 archive_dict = {}
 title = None
 
+
+def secs_to_clock(sec):
+    mins, secs = divmod(sec, 60)
+    hours, mins = divmod(mins, 60)
+    return f"{hours:02}:{mins:02}:{secs:02}"
+
+# If arguments are passed directly (args), the function parses them similarly to user input.
+if len(args) == 1:
+    hours, minutes, seconds = 0, 0, args[0]
+elif len(args) == 2:
+    hours, minutes, seconds = 0, args[0], args[1]
+elif len(args) == 3:
+    hours, minutes, seconds = args
+else:
+    print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+    print("Invalid time format. Ensure time is in the).")
+    return
+
+
 def timer(*args):
 # The timer function accepts an optional set of arguments representing the time in hours, minutes, and seconds.
     global timer_data, user_input, quit_flag, elapsed_time
@@ -92,20 +111,19 @@ def timer(*args):
                 break
             if pause_flag.is_set(): 
                 # During active countdown (pause_flag.is_set()), it decrements remaining_time.
-                mins, secs = divmod(remaining_time, 60)
-                hours, mins = divmod(mins, 60)
+                # mins, secs = divmod(remaining_time, 60)
+                # hours, mins = divmod(mins, 60)
                 # Uses divmod to convert seconds into hours, minutes, and seconds.
-                print(f"\rRemaining time: {hours:02}:{mins:02}:{secs:02} | Press 'p' to pause, Press 'q' to quit: ",end="")
+                print(f"\rRemaining time: {secs_to_clock(remaining_time)} | Press 'p' to pause, Press 'q' to quit: ",end="")
+
                 # Updates the display using \r (carriage return) to overwrite the previous output.
 
                 time.sleep(1)
                 remaining_time -= 1
             else:
                 # During pause (not pause_flag.is_set()), it tracks paused_time.
-                
-                mins, secs = divmod(paused_time, 60)
-                hours, mins = divmod(mins, 60)
-                print(f"\rPause time: {hours:02}:{mins:02}:{secs:02} | Press 'r' to resume, Press 'q' to quit:", end="")
+
+                print(f"\rPause time: {secs_to_clock(paused_time)} | Press 'r' to resume, Press 'q' to quit:", end="")
                 paused_time += 1
                 time.sleep(1)
                 
@@ -116,16 +134,12 @@ def timer(*args):
             sys.stdout.write("\rRemaining time: 00:00:00 | Timer completed!    ")
             # Clears the line and displays “Timer completed!”.
             sys.stdout.write("\n")
-
-            mins, secs = divmod((paused_time - resume_count), 60)
-            hours, mins = divmod(mins, 60)
-            paused_time_str = f"{hours:02}:{mins:02}:{secs:02}" if hours > 0 else f"{mins:02}:{secs:02}"
+            paused_time_str = f"{secs_to_clock(total_pause_time)}"
             # Displays the total time the timer was paused.
             
-            elapsed_time = original_total_time
-            elapsed_mins, elapsed_secs = divmod(elapsed_time, 60)
-            elapsed_hours, elapsed_mins = divmod(elapsed_mins, 60)
-            elapsed_time_str = f"{elapsed_hours:02}:{elapsed_mins:02}:{elapsed_secs:02}" if hours > 0 else f"{mins:02}:{secs:02}"
+            elapsed_time = original_total_time - remaining_time
+
+            elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
 
             # Store details in the global list
             timer_data.append({
@@ -165,14 +179,12 @@ def timer(*args):
                 elapsed_time = original_total_time - remaining_time
 
                 # Format total paused time string
-                mins, secs = divmod(total_pause_time, 60)
-                hours, mins = divmod(mins, 60)
-                paused_time_str = f"{hours:02}:{mins:02}:{secs:02}" if hours > 0 else f"{mins:02}:{secs:02}"
 
-                # Format elapsed time string
-                elapsed_mins, elapsed_secs = divmod(elapsed_time, 60)
-                elapsed_hours, elapsed_mins = divmod(elapsed_mins, 60)
-                elapsed_time_str = f"{elapsed_hours:02}:{elapsed_mins:02}:{elapsed_secs:02}"
+                paused_time_str = f"{secs_to_clock(total_pause_time)}"
+
+
+                elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
+
 
                 # Store details in the global list
                 timer_data.append({
