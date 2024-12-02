@@ -19,16 +19,17 @@ def secs_to_clock(sec):
     return f"{hours:02}:{mins:02}:{secs:02}"
 
 # If arguments are passed directly (args), the function parses them similarly to user input.
-if len(args) == 1:
-    hours, minutes, seconds = 0, 0, args[0]
-elif len(args) == 2:
-    hours, minutes, seconds = 0, args[0], args[1]
-elif len(args) == 3:
-    hours, minutes, seconds = args
-else:
-    print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
-    print("Invalid time format. Ensure time is in the).")
-    return
+def args(args):
+    if len(args) == 1:
+        hours, minutes, seconds = 0, 0, args[0]
+    elif len(args) == 2:
+        hours, minutes, seconds = 0, args[0], args[1]
+    elif len(args) == 3:
+        hours, minutes, seconds = args
+    else:
+        print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+        print("Invalid time format. Ensure time is in the).")
+        return
 
 
 def timer(*args):
@@ -51,7 +52,7 @@ def timer(*args):
                 time_parts = list(map(int, time_input.split(',')))
                 # time_input.split(',') splits the input string into components (e.g., “1,0,30” → [1, 0, 30]).
                 # list(map(int, ...)) converts each part into an integer.
-
+                args(time_parts)
                 if len(time_parts) == 1:
                     hours, minutes, seconds = 0, 0, time_parts[0] # Interpreted as seconds.
                 elif len(time_parts) == 2:
@@ -78,17 +79,8 @@ def timer(*args):
                 print("Invalid input. Please enter time in the format HH,MM,SS.")
     else:
         # If arguments are passed directly (args), the function parses them similarly to user input.
-        if len(args) == 1:
-            hours, minutes, seconds = 0, 0, args[0]
-        elif len(args) == 2:
-            hours, minutes, seconds = 0, args[0], args[1]
-        elif len(args) == 3:
-            hours, minutes, seconds = args
-        else:
-            print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
-            print("Invalid time format. Ensure time is in the).")
-            return
-
+        args(args)
+            
     total_seconds = hours * 3600 + minutes * 60 + seconds
     # Converts the time into total seconds for easier countdown calculation.
     original_total_time = copy.deepcopy(total_seconds)
