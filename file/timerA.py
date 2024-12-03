@@ -100,7 +100,7 @@ def timer(*args,title =None):
     
 
     def display_timer():
-        nonlocal remaining_time, paused_time, pause_count, resume_count, original_total_time, terminate
+        nonlocal remaining_time, paused_time, pause_count, resume_count, original_total_time
         while remaining_time > 0:
             if quit_flag.is_set():  # If quit flag is set, break out of the loop
                 break
@@ -113,16 +113,13 @@ def timer(*args,title =None):
                 paused_time += 1
                 time.sleep(1)
 
-        while remaining_time == 0:  # When timer completes
+        if remaining_time == 0:  # When timer completes
             sys.stdout.write("\033[K")
             sys.stdout.write("\rRemaining time: 00:00:00 | Timer completed!                           ")
-            # Clears the line and displays “Timer completed!”.
             sys.stdout.write("\n")
             paused_time_str = f"{secs_to_clock(total_pause_time)}"
-            # Displays the total time the timer was paused.
             
             elapsed_time = original_total_time - remaining_time
-
             elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
 
             # Store details in the global list
@@ -130,72 +127,36 @@ def timer(*args,title =None):
                 "elapsed_time": elapsed_time_str,
                 "paused_time": paused_time_str
             })
-            return paused_time_str 
-            
 
-            
-        
-        
-        
-                   
+            # Trigger quit flag to terminate `input_listener`
+            quit_flag.set()
+            return
 
-
-
-    terminate = False
     def input_listener():
-        nonlocal remaining_time, paused_time, pause_count, resume_count, total_pause_time_list, total_pause_time, terminate
+        nonlocal remaining_time, paused_time, pause_count, resume_count, total_pause_time_list, total_pause_time
 
-        while not quit_flag.is_set():
-            if terminate:
-                break
-            
+        while not quit_flag.is_set():  # Continues running unless quit_flag is set
+            try:
+                user_input = input().strip().lower()
 
-            user_input = input().strip().lower()
+                if user_input == "p" and pause_flag.is_set():  # Pause the timer
+                    pause_flag.clear()
+                    paused_time = 0  # Reset pause time tracker for the new pause session
+                    pause_count += 1
 
+                elif user_input == "r" and not pause_flag.is_set():  # Resume the timer
+                    pause_flag.set()
+                    if paused_time > 0:
+                        total_pause_time_list.append(paused_time)  # Add the paused time to the list
+                    resume_count += 1
+                elif user_input == "q":  # Quit the timer
+                    quit_flag.set()  # Set the quit flag to stop both threads
+                    break
 
-            if user_input == "p" and pause_flag.is_set():  # Pause the timer
-                pause_flag.clear()
-                paused_time = 0  # Reset pause time tracker for the new pause session
-                pause_count += 1
-
-            elif user_input == "r" and not pause_flag.is_set():  # Resume the timer
-                pause_flag.set()
-                if paused_time > 0:
-                    total_pause_time_list.append(paused_time)  # Add the paused time to the list
-                resume_count += 1
-            elif user_input == "q":  # Quit the timer
-                quit_flag.set()  # Set the quit flag to stop both threads
-
-                # Add the current paused time to the total pause list
-                if not pause_flag.is_set() and paused_time > 0:
-                    total_pause_time_list.append(paused_time)
-
-                # Calculate total pause time
-                total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
-
-                # Calculate elapsed time
-                elapsed_time = original_total_time - remaining_time
-
-                # Format total paused time string
-                paused_time_str = f"{secs_to_clock(total_pause_time)}"
-                elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
-
-                # Store details in the global list
-                timer_data.append({
-                    "Elapsed_time": elapsed_time_str,
-                    "Total_paused_time": paused_time_str
-                })
-
-                # Display summary
-                print("\nTimer Summary:")
-                print(f"Elapsed Time: {elapsed_time_str}")
-                print(f"Total Pause Time: {paused_time_str}")
-
-                time.sleep(1)
-                break
-
-            break
-            
+            except EOFError:
+                # Handle input interruptions
+                quit_flag.set()
+                break            
     timer_thread = threading.Thread(target=display_timer, daemon=True)
     # Displays the countdown.
     input_thread = threading.Thread(target=input_listener, daemon=True)

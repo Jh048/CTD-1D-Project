@@ -103,12 +103,11 @@ def m3():
     rest_time = custom_timer_rest()
 
     # Pass durations to the timer
-    while True:
-        print(f"Starting work session: {sel}")
-        timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
-        
-        print("Starting rest session...")
-        timer(*rest_time, title="rest")  # Unpack the time tuple and pass it to the timer
+    print(f"Starting work session: {sel}")
+    timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
+    
+    print("Starting rest session...")
+    timer(*rest_time, title="rest")  # Unpack the time tuple and pass it to the timer
 
 
 def m2():
