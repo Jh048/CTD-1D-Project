@@ -16,6 +16,9 @@ from timerA import *
     # # time_input.strip() removes leading/trailing spaces.
 
     # time_parts = list(map(int, time_input.split(',')))
+def reset_timer_flag():
+    global quit_flag
+    quit_flag.clear()
 
 def input_formate():
     while True:
@@ -95,18 +98,22 @@ def m3():
     print(menu3)
     sel = input("Please enter your activity (e.g., 'study', 'work', 'others'): ").strip()
 
+
     # Get work and rest durations
     print("Set your work duration:")
     work_time = custom_timer_work()
+    print()
     
     print("Set your rest duration:")
     rest_time = custom_timer_rest()
 
     # Pass durations to the timer
     print(f"Starting work session: {sel}")
+    reset_timer_flag()
     timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
     
     print("Starting rest session...")
+    reset_timer_flag()
     timer(*rest_time, title="rest")  # Unpack the time tuple and pass it to the timer
 
 

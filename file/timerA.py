@@ -151,6 +151,33 @@ def timer(*args,title =None):
                     resume_count += 1
                 elif user_input == "q":  # Quit the timer
                     quit_flag.set()  # Set the quit flag to stop both threads
+
+                    # Add the current paused time to the total pause list
+                    if not pause_flag.is_set() and paused_time > 0:
+                        total_pause_time_list.append(paused_time)
+
+                    # Calculate total pause time
+                    total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
+
+                    # Calculate elapsed time
+                    elapsed_time = original_total_time - remaining_time
+
+                    # Format total paused time string
+                    paused_time_str = f"{secs_to_clock(total_pause_time)}"
+                    elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
+
+                    # Store details in the global list
+                    timer_data.append({
+                        "Elapsed_time": elapsed_time_str,
+                        "Total_paused_time": paused_time_str
+                    })
+
+                    # Display summary
+                    print("\nTimer Summary:")
+                    print(f"Elapsed Time: {elapsed_time_str}")
+                    print(f"Total Pause Time: {paused_time_str}")
+
+                    time.sleep(1)
                     break
 
             except EOFError:
