@@ -127,7 +127,10 @@ def timer(*args,title =None):
                 "elapsed_time": elapsed_time_str,
                 "paused_time": paused_time_str
             })
-
+            # Display summary
+            print("\nTimer Summary:")
+            print(f"Elapsed Time: {elapsed_time_str}")
+            print(f"Total Pause Time: {paused_time_str}")
             # Trigger quit flag to terminate `input_listener`
             quit_flag.set()
             return
@@ -178,7 +181,8 @@ def timer(*args,title =None):
                     print(f"Total Pause Time: {paused_time_str}")
 
                     time.sleep(1)
-                    break
+                
+                    return user_input
 
             except EOFError:
                 # Handle input interruptions
@@ -196,7 +200,7 @@ def timer(*args,title =None):
     timer_thread.join()
     input_thread.join()
 
-    print(timer_data)
+
 
     
 # Start the timer

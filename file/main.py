@@ -95,6 +95,7 @@ def custom_timer_rest():
             print("Invalid input. Please enter time in HH,MM,SS format.")
 
 def m3():
+
     print(menu3)
     sel = input("Please enter your activity (e.g., 'study', 'work', 'others'): ").strip()
 
@@ -111,6 +112,9 @@ def m3():
     print(f"Starting work session: {sel}")
     reset_timer_flag()
     timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
+    if quit_flag.is_set():
+        print("bye")
+        return
     
     print("Starting rest session...")
     reset_timer_flag()
