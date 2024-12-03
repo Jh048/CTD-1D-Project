@@ -13,8 +13,8 @@ Do you want to start a timer?
 
 menu2 = """                    
 --------------------------
-Do you want to study,work or others?
-1) study
+Do you want to do?
+1) study 
 2) work
 3) others
 --------------------------

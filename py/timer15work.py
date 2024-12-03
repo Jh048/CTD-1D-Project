@@ -2,7 +2,7 @@ import time # Used to manage delays and countdown timing in seconds.
 import threading # Enables concurrent execution of code (to run the timer and handle user inputs simultaneously).
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
-import menu as m
+
 
 
 
