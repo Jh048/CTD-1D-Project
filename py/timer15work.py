@@ -270,9 +270,17 @@ def start_or_archive():
         print ('invalid')
 
 
-def view_archive():
-    return archive_dict
 
+def view_archive():
+    total_time = {}
+    for activity, durations in archive_dict.items():
+        total_time[activity] = sum(durations)  # Sum all durations for each activity
+    
+    print("Summary of time spent:")
+    for activity, total in total_time.items():
+        print(f"{activity.capitalize()}: {total} minutes")
+    
+    return total_time
 
 
 
