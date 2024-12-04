@@ -1,0 +1,14 @@
+def timer_loop():
+    global quit_flag, timer_data, elapsed_time, title
+    while not quit_flag.is_set():
+        print("\nStarting new timer session...")
+        timer()  # Call the timer function
+        if not quit_flag.is_set():
+            # Timer completed normally, ask if the user wants to restart
+            user_choice = input("Timer completed! Do you want to start another session? (y/n): ").strip().lower()
+            if user_choice != 'y':
+                print("Exiting the loop. Goodbye!")
+                break
+        else:
+            print("Timer stopped by user.")
+
