@@ -128,7 +128,7 @@ def m3():
             print("Starting rest session...")
             reset_timer_flag()
             
-            time_up = timer(*rest_time, title=f"{sel}_rest")  # Unpack the time tuple and pass it to the timer
+            time_up = timer(*rest_time, title=f"{sel}_break")  # Unpack the time tuple and pass it to the timer
             if time_up:
                 print("Rest session completed.")
                 rm3_1()
@@ -162,10 +162,10 @@ def m2():
  
     if sel == "1":
         timer(25,0 ,title ="study")
-        timer(5,0, title = "break")
+        timer(5,0, title = "study_break")
     elif sel == "2":
         timer(45,0, title = "work")
-        timer(15,0, title = "break")
+        timer(15,0, title = "work_break")
     elif sel == "3":
         m3()
         
