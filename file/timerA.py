@@ -3,15 +3,18 @@ import threading # Enables concurrent execution of code (to run the timer and ha
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
 import menu as m
+import signal
 
 
 
-title = []
+timer_data = []
 user_input = None
 quit_flag = threading.Event()  # Global quit flag to control exit
 elapsed_time = 0
 archive_dict = {}
 title = None
+user_input = ""
+
 
 
 def secs_to_clock(sec):
@@ -19,25 +22,14 @@ def secs_to_clock(sec):
     hours, mins = divmod(mins, 60)
     return f"{hours:02}:{mins:02}:{secs:02}"
 
-# If arguments are passed directly (args), the function parses them similarly to user input.
-def args(a):
-    if len(a) == 1:
-        hours, minutes, seconds = 0, 0, args[0]
-    elif len(a) == 2:
-        hours, minutes, seconds = 0, args[0], args[1]
-    elif len(a) == 3:
-        hours, minutes, seconds = args
-    else:
-        print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
-        print("Invalid time format. Ensure time is in the).")
-        return
-    
+
+#=========================================================================================================
 
 
-def timer(*args):
+def timer(*args,title =None):
+
 # The timer function accepts an optional set of arguments representing the time in hours, minutes, and seconds.
-    global title, user_input, quit_flag, elapsed_time
-
+    global timer_data, user_input, quit_flag, elapsed_time, user_input    
     if not args:
     # If no arguments are passed, the function prompts the user to enter a countdown time in the format HH,MM,SS
 
@@ -81,8 +73,17 @@ def timer(*args):
                 print("Invalid input. Please enter time in the format HH,MM,SS.")
     else:
         # If arguments are passed directly (args), the function parses them similarly to user input.
-        args(args)
-            
+
+        if len(args) == 1:
+            hours, minutes, seconds = 0, 0, args[0]
+        elif len(args) == 2:
+            hours, minutes, seconds = 0, args[0], args[1]
+        elif len(args) == 3:
+            hours, minutes, seconds = args
+        else:
+            print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+            print("Invalid time format. Ensure time is in the).")
+            return 
     total_seconds = hours * 3600 + minutes * 60 + seconds
     # Converts the time into total seconds for easier countdown calculation.
     original_total_time = copy.deepcopy(total_seconds)
@@ -95,109 +96,98 @@ def timer(*args):
     total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
     pause_count = 0
     resume_count = 0
+ 
+    
 
     def display_timer():
-        
         nonlocal remaining_time, paused_time, pause_count, resume_count, original_total_time
         while remaining_time > 0:
-            
-            if quit_flag.is_set(): # If quit flag is set, break out of the loop
+            if quit_flag.is_set():  # If quit flag is set, break out of the loop
                 break
             if pause_flag.is_set(): 
-                # During active countdown (pause_flag.is_set()), it decrements remaining_time.
-                # mins, secs = divmod(remaining_time, 60)
-                # hours, mins = divmod(mins, 60)
-                # Uses divmod to convert seconds into hours, minutes, and seconds.
-                print(f"\rRemaining time: {secs_to_clock(remaining_time)} | Press 'p' to pause, Press 'q' to quit: ",end="")
-
-                # Updates the display using \r (carriage return) to overwrite the previous output.
-
+                print(f"\rRemaining time: {secs_to_clock(remaining_time)} | Press 'p' to pause, Press 'q' to quit: ", end="")
                 time.sleep(1)
                 remaining_time -= 1
             else:
-                # During pause (not pause_flag.is_set()), it tracks paused_time.
-
                 print(f"\rPause time: {secs_to_clock(paused_time)} | Press 'r' to resume, Press 'q' to quit:", end="")
                 paused_time += 1
                 time.sleep(1)
-                
-                
 
-        if remaining_time == 0 and not user_input == "q":
+        if remaining_time == 0:  # When timer completes
             sys.stdout.write("\033[K")
-            sys.stdout.write("\rRemaining time: 00:00:00 | Timer completed!    ")
-            # Clears the line and displays “Timer completed!”.
+            sys.stdout.write("\rRemaining time: 00:00:00 | Timer completed!                           ")
             sys.stdout.write("\n")
             paused_time_str = f"{secs_to_clock(total_pause_time)}"
-            # Displays the total time the timer was paused.
             
             elapsed_time = original_total_time - remaining_time
-
             elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
 
             # Store details in the global list
-            title.append({
+            timer_data.append({
                 "elapsed_time": elapsed_time_str,
                 "paused_time": paused_time_str
             })
-            return paused_time_str 
-                   
-            
-    
+            # Display summary
+            print("\nTimer Summary:")
+            print(f"Elapsed Time: {elapsed_time_str}")
+            print(f"Total Pause Time: {paused_time_str}")
+            # Trigger quit flag to terminate `input_listener`
+            quit_flag.set()
+            return
+
     def input_listener():
         nonlocal remaining_time, paused_time, pause_count, resume_count, total_pause_time_list, total_pause_time
-        while remaining_time > 0:
-            user_input = input().strip().lower()
-            if user_input == "p" and pause_flag.is_set():  # Pause the timer
-                pause_flag.clear()
-                paused_time = 0  # Reset pause time tracker for the new pause session
-                pause_count += 1
 
-            elif user_input == "r" and not pause_flag.is_set():  # Resume the timer
-                pause_flag.set()
-                if paused_time > 0:
-                    total_pause_time_list.append(paused_time)  # Add the paused time to the list
-                resume_count += 1
+        while not quit_flag.is_set():  # Continues running unless quit_flag is set
+            try:
+                user_input = input().strip().lower()
 
-            elif user_input == "q":  # Quit the timer
-                quit_flag.set()  # Set the quit flag to stop both threads
+                if user_input == "p" and pause_flag.is_set():  # Pause the timer
+                    pause_flag.clear()
+                    paused_time = 0  # Reset pause time tracker for the new pause session
+                    pause_count += 1
 
-                # Add the current paused time to the total pause list
-                if not pause_flag.is_set() and paused_time > 0:
-                    total_pause_time_list.append(paused_time )
+                elif user_input == "r" and not pause_flag.is_set():  # Resume the timer
+                    pause_flag.set()
+                    if paused_time > 0:
+                        total_pause_time_list.append(paused_time)  # Add the paused time to the list
+                    resume_count += 1
+                elif user_input == "q":  # Quit the timer
+                    quit_flag.set()  # Set the quit flag to stop both threads
 
-                # Calculate total pause time
-                total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
+                    # Add the current paused time to the total pause list
+                    if not pause_flag.is_set() and paused_time > 0:
+                        total_pause_time_list.append(paused_time)
 
-                # Calculate elapsed time
-                elapsed_time = original_total_time - remaining_time
+                    # Calculate total pause time
+                    total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
 
-                # Format total paused time string
+                    # Calculate elapsed time
+                    elapsed_time = original_total_time - remaining_time
 
-                paused_time_str = f"{secs_to_clock(total_pause_time)}"
+                    # Format total paused time string
+                    paused_time_str = f"{secs_to_clock(total_pause_time)}"
+                    elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
 
+                    # Store details in the global list
+                    timer_data.append({
+                        "Elapsed_time": elapsed_time_str,
+                        "Total_paused_time": paused_time_str
+                    })
 
-                elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
+                    # Display summary
+                    print("\nTimer Summary:")
+                    print(f"Elapsed Time: {elapsed_time_str}")
+                    print(f"Total Pause Time: {paused_time_str}")
 
+                    time.sleep(1)
+                
+                    return user_input
 
-                # Store details in the global list
-                key_name = str(title)
-                archive_dict[key_name].append({
-                    "Elapsed_time": elapsed_time_str,
-                    "Total_paused_time": paused_time_str})
-
-                # Display summary
-                print("\nTimer Summary:")
-                print(f"Elapsed Time: {elapsed_time_str}")
-                print(f"Total Pause Time: {paused_time_str}")
-
-                time.sleep(1)
-                break
-
-        
-            
-
-
+            except EOFError:
+                # Handle input interruptions
+                quit_flag.set()
+                break            
     timer_thread = threading.Thread(target=display_timer, daemon=True)
     # Displays the countdown.
     input_thread = threading.Thread(target=input_listener, daemon=True)
@@ -209,12 +199,8 @@ def timer(*args):
 
     timer_thread.join()
     input_thread.join()
-    
-    print(total_pause_time_list)
-    print(total_pause_time)
-    print(elapsed_time)
-    print(title)
-    print(archive_dict)
+
+
 
     
 # Start the timer
@@ -230,39 +216,37 @@ t.timer() to use i another file'''
   # Example of calling the function with hours, minutes, and seconds
 # Main entry point
 
+
+#=========================================================================================================
+def a():
+    print(m.menu1)
+
 def start_or_archive():
     global title
-    Start_or_archive = input('Do you want to start a timer?(y/n): ').lower()
-    if Start_or_archive == 'y':
-        title = input ("Do you want to study, work or others?") .lower()
+    Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
+    if Start_or_archieve == 'y':
+        title = input ("Do you want to study,work or others?") .lower()
         if title== "study":
             #default timer for study
             print (f'You have chosen {title}')
-            archive_dict[title] = []
-            timer()
         elif title == "work":
             #default for study
             print (f'You have chosen {title}')
-            archive_dict[title] = []
-            timer()
         elif title == "others":
             other_activity= input ("What do you want to do today?") .lower()
             #ask for duration function
             print (f'You have chosen {other_activity}')
-            archive_dict[title] = []
-            timer()
-        
-
-    
+        else:
+            print (invalid)
         
         # print(f"working session: {title}")
         
-    elif Start_or_archive =='n':
-        Archive= input ('Do you want to look at your history?(y/n): ').lower()
-        if Archive == 'y':
-            view_archive()
+    elif title=='n':
+        Archieve= input ('Do you want to look at your history?(y/n): ').lower()
+        if Archieve == 'y':
+            print ('Loading History..........')
             #Histroy function
-        elif Archive == 'n':
+        elif Archieve == 'n':
             print ('Bye! Have a great day!')
         else:
             print("incorrct input, please try again")
@@ -270,16 +254,13 @@ def start_or_archive():
         print ('invalid')
 
 
-def view_archive():
-    return archive_dict
-
 
 
 
 def data():
-    global title
+    global timer_data
     # Ensure timer_data has entries before processing
-    if not title:
+    if not timer_data:
         print("No data available.")
         return None
 
@@ -287,7 +268,7 @@ def data():
     study_times = []  # For elapsed work session times
     break_times = []  # For total paused times
 
-    for entry in title:
+    for entry in timer_data:
         # Convert the "elapsed_time" and "paused_time" strings to total minutes
         elapsed_time = entry.get("elapsed_time", "00:00:00")
         paused_time = entry.get("paused_time", "00:00:00")
@@ -297,12 +278,12 @@ def data():
 
     # Build the dictionary with the summed data
     pomodoro_data = {
-        'study': sum(study_times),  # Total study time in minutesy
+        'study': sum(study_times),  # Total study time in minutes
         'break': sum(break_times)  # Total break time in minutes
     }
 
     return pomodoro_data
 
 if __name__ == "__main__":
-    start_or_archive()
+    timer()
 

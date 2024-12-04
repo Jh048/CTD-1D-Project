@@ -157,3 +157,5 @@ can import timer as t
 t.timer() to sue i another file'''
 
 # timer()  # Example of calling the function with hours, minutes, and seconds
+if __name__ == "__main__":
+    timer()
