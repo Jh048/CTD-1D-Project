@@ -2,7 +2,7 @@ import time # Used to manage delays and countdown timing in seconds.
 import threading # Enables concurrent execution of code (to run the timer and handle user inputs simultaneously).
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
-import menu as m
+
 
 
 
@@ -136,7 +136,7 @@ def timer(*args):
             elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
 
             # Store details in the global list
-            title.append({
+            title = ({
                 "elapsed_time": elapsed_time_str,
                 "paused_time": paused_time_str
             })
@@ -230,6 +230,8 @@ t.timer() to use i another file'''
   # Example of calling the function with hours, minutes, and seconds
 # Main entry point
 
+
+
 def start_or_archive():
     global title
     Start_or_archive = input('Do you want to start a timer?(y/n): ').lower()
@@ -261,7 +263,6 @@ def start_or_archive():
         Archive= input ('Do you want to look at your history?(y/n): ').lower()
         if Archive == 'y':
             view_archive()
-            #Histroy function
         elif Archive == 'n':
             print ('Bye! Have a great day!')
         else:
@@ -270,17 +271,47 @@ def start_or_archive():
         print ('invalid')
 
 
+#def view_archive():
+    #total_time = 0
+    #for i in archive_dict:
+        #print(archive_dict)
+        #print(i,archive_dict[i]['Elapsed_time'])
+        #total_time = total_time + int(archive_dict[i]['Elapsed_time'])
+
+    
+    #print(total_time)
+def clock_to_secs(clock_time):
+    """Converts HH:MM:SS format to total seconds."""
+    try:
+        hours, minutes, seconds = map(int, clock_time.split(":"))
+        return hours * 3600 + minutes * 60 + seconds
+    except ValueError:
+        print(f"Invalid time format: {clock_time}. Expected HH:MM:SS format.")
+        return 0
+
 
 def view_archive():
-    total_time = {}
-    for activity, durations in archive_dict.items():
-        total_time[activity] = sum(durations)  # Sum all durations for each activity
-    
-    print("Summary of time spent:")
-    for activity, total in total_time.items():
-        print(f"{activity.capitalize()}: {total} minutes")
-    
-    return total_time
+    """Displays the archive and calculates total study and work times."""
+    total_study_time = 0
+    total_work_time = 0
+
+    # Loop through the archive dictionary to process each activity and its sessions
+    for activity, sessions in archive_dict.items():
+        print(f"{activity.capitalize()} Sessions:")
+        for session in sessions:
+            elapsed_time = clock_to_secs(session.get("Elapsed_time", "00:00:00"))
+            paused_time = session.get("Total_paused_time", "00:00:00")
+            print(f"  Elapsed Time: {session.get('Elapsed_time', '00:00:00')}, Paused Time: {paused_time}")
+
+            # Accumulate the elapsed time based on the activity type
+            if activity == "study":
+                total_study_time += elapsed_time
+            elif activity == "work":
+                total_work_time += elapsed_time
+
+    # Display the total study and work times in HH:MM:SS format
+    print(f"\nTotal Study Time: {secs_to_clock(total_study_time)}")
+    print(f"Total Work Time: {secs_to_clock(total_work_time)}")
 
 
 
@@ -311,6 +342,14 @@ def data():
 
     return pomodoro_data
 
-if __name__ == "__main__":
-    start_or_archive()
+#if __name__ == "__main__":
+#    start_or_archive()
 
+while(True):
+    quit = input('Do you want to continue?:(y/n)').lower()
+    if quit == 'y':
+        if quit_flag.is_set():
+            quit_flag.clear()
+        start_or_archive()
+    else:
+        break
