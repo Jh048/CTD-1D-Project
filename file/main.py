@@ -146,6 +146,8 @@ def m3():
             m3_1()
         elif input1 == "2":
             print(timer_data)
+            rm3()
+
  
             return
         else:
@@ -154,7 +156,16 @@ def m3():
 
     m3_1()
 
-
+def rm3():
+    sel = input("1: m3,2:quit:")
+    if sel =="1":
+        m3()
+    elif sel == "2":
+        return
+    else:
+        print("wrong input, try again")
+        rm3()
+    
 
 def m2():
     print(menu2)
