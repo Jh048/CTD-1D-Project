@@ -95,6 +95,12 @@ def custom_timer_rest():
             print("Invalid input. Please enter time in HH,MM,SS format.")
 
 def m3():
+    """                    
+    --------------------------
+    "What do you want to do today?"
+    cooking, meditation, etc
+    --------------------------
+    """
 
     print(menu3)
     sel = input("Please enter your activity (e.g., 'study', 'work', 'others'): ").strip()
@@ -108,17 +114,46 @@ def m3():
     print("Set your rest duration:")
     rest_time = custom_timer_rest()
 
-    # Pass durations to the timer
-    print(f"Starting work session: {sel}")
-    reset_timer_flag()
-    timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
-    if quit_flag.is_set():
-        print("bye")
-        return
+    def m3_1():
+        global time_up
+
+        # Pass durations to the timer
+        print(f"Starting work session: {sel}")
+        reset_timer_flag()
+        time_up = timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
+
+        # Check if time_up is False (i.e., the timer did not finish or was interrupted)
+        if time_up:
+            print("Time's up for work!")
+            print("Starting rest session...")
+            reset_timer_flag()
+            
+            time_up = timer(*rest_time, title=f"{sel}_rest")  # Unpack the time tuple and pass it to the timer
+            if time_up:
+                print("Rest session completed.")
+                rm3_1()
+            else:
+                print("Rest session was interrupted.")
+                return
+        else:
+            print("Work session was interrupted.")
+            return
     
-    print("Starting rest session...")
-    reset_timer_flag()
-    timer(*rest_time, title="rest")  # Unpack the time tuple and pass it to the timer
+
+    def rm3_1():
+        input1 = input("Do you want to continue the timer?")
+        if input1 == "1":
+            m3_1()
+        elif input1 == "2":
+            print(timer_data)
+ 
+            return
+        else:
+            print("invalid input, please try again.")
+            rm3_1()
+
+    m3_1()
+
 
 
 def m2():
