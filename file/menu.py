@@ -23,7 +23,6 @@ menu3 = """
 --------------------------
 "What do you want to do today?"
 cooking, meditation, etc
-
 --------------------------
 """
 menu4 = """

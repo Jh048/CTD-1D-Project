@@ -14,6 +14,9 @@ elapsed_time = 0
 archive_dict = {}
 title = None
 user_input = ""
+time_up = False
+
+
 
 
 
@@ -29,7 +32,9 @@ def secs_to_clock(sec):
 def timer(*args,title =None):
 
 # The timer function accepts an optional set of arguments representing the time in hours, minutes, and seconds.
-    global timer_data, user_input, quit_flag, elapsed_time, user_input    
+    global timer_data, user_input, quit_flag, elapsed_time, user_input, time_up
+    time_up = False
+    quit_flag.clear()
     if not args:
     # If no arguments are passed, the function prompts the user to enter a countdown time in the format HH,MM,SS
 
@@ -100,6 +105,8 @@ def timer(*args,title =None):
     
 
     def display_timer():
+        
+        global time_up
         nonlocal remaining_time, paused_time, pause_count, resume_count, original_total_time
         while remaining_time > 0:
             if quit_flag.is_set():  # If quit flag is set, break out of the loop
@@ -114,6 +121,7 @@ def timer(*args,title =None):
                 time.sleep(1)
 
         if remaining_time == 0:  # When timer completes
+            time_up = True
             sys.stdout.write("\033[K")
             sys.stdout.write("\rRemaining time: 00:00:00 | Timer completed!                           ")
             sys.stdout.write("\n")
@@ -132,10 +140,13 @@ def timer(*args,title =None):
             print(f"Elapsed Time: {elapsed_time_str}")
             print(f"Total Pause Time: {paused_time_str}")
             # Trigger quit flag to terminate `input_listener`
+            print("Press enter to continue.")
+            
             quit_flag.set()
-            return
+
 
     def input_listener():
+        global time_up
         nonlocal remaining_time, paused_time, pause_count, resume_count, total_pause_time_list, total_pause_time
 
         while not quit_flag.is_set():  # Continues running unless quit_flag is set
@@ -153,7 +164,7 @@ def timer(*args,title =None):
                         total_pause_time_list.append(paused_time)  # Add the paused time to the list
                     resume_count += 1
                 elif user_input == "q":  # Quit the timer
-                    quit_flag.set()  # Set the quit flag to stop both threads
+                    
 
                     # Add the current paused time to the total pause list
                     if not pause_flag.is_set() and paused_time > 0:
@@ -179,15 +190,18 @@ def timer(*args,title =None):
                     print("\nTimer Summary:")
                     print(f"Elapsed Time: {elapsed_time_str}")
                     print(f"Total Pause Time: {paused_time_str}")
-
-                    time.sleep(1)
+                    quit_flag.set()  # Set the quit flag to stop both threads
+                    time_up = False
                 
-                    return user_input
+                    break
 
             except EOFError:
                 # Handle input interruptions
                 quit_flag.set()
-                break            
+                break 
+
+
+              
     timer_thread = threading.Thread(target=display_timer, daemon=True)
     # Displays the countdown.
     input_thread = threading.Thread(target=input_listener, daemon=True)
@@ -199,6 +213,8 @@ def timer(*args,title =None):
 
     timer_thread.join()
     input_thread.join()
+    print(time_up)
+    return time_up
 
 
 
