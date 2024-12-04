@@ -20,6 +20,7 @@ time_up = False
 
 
 
+
 def secs_to_clock(sec):
     mins, secs = divmod(sec, 60)
     hours, mins = divmod(mins, 60)
@@ -129,14 +130,15 @@ def timer(*args,title =None):
             
             elapsed_time = original_total_time - remaining_time
             elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
-            elapsed_time_key = f"{title}_Elapsed_time"
-            paused_time_key = f"{title}_paused_time"
+
 
             # Store details in the global list
-            timer_data.append({
-                elapsed_time_key : elapsed_time_str,
-                paused_time_key : paused_time_str
-            })
+            key_name = str(title or "No Title")
+            if key_name not in archive_dict:
+                archive_dict[key_name] = []
+            archive_dict[key_name].append({
+                "Elapsed_time": elapsed_time_str,
+                "Total_paused_time": paused_time_str})
             # Display summary
             print("\nTimer Summary:")
             print(f"Elapsed Time: {elapsed_time_str}")
@@ -181,14 +183,14 @@ def timer(*args,title =None):
                     # Format total paused time string
                     paused_time_str = f"{secs_to_clock(total_pause_time)}"
                     elapsed_time_str = f"{secs_to_clock(elapsed_time)}"
-                    elapsed_time_key = f"{title}_Elapsed_time"
-                    paused_time_key = f"{title}_paused_time"
 
-                    # Store details in the global list
-                    timer_data.append({
-                        elapsed_time_key : elapsed_time_str,
-                        paused_time_key : paused_time_str
-                    })
+                    key_name = str(title or "No Title")
+                    if key_name not in archive_dict:
+                        archive_dict[key_name] = []
+                    archive_dict[key_name].append({
+                        "Elapsed_time": elapsed_time_str,
+                        "Total_paused_time": paused_time_str})
+
 
                     # Display summary
                     print("\nTimer Summary:")
@@ -217,7 +219,7 @@ def timer(*args,title =None):
 
     timer_thread.join()
     input_thread.join()
-    print(time_up)
+    print(archive_dict)
     return time_up
 
 

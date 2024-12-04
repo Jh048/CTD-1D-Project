@@ -34,4 +34,4 @@ timer_data = [
 
 result = sum_timer_data(timer_data)
 print(result)  # Output: {'total_elapsed': '00:00:10', 'total_paused': '00:00:00'}
-print(timer_data)
+print(timer_data) 
