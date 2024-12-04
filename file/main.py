@@ -127,7 +127,8 @@ def m3():
             print("Time's up for work!")
             print("Starting rest session...")
             reset_timer_flag()
-            time_up = timer(*rest_time, title="rest")  # Unpack the time tuple and pass it to the timer
+            
+            time_up = timer(*rest_time, title=f"{sel}_rest")  # Unpack the time tuple and pass it to the timer
             if time_up:
                 print("Rest session completed.")
                 rm3_1()
@@ -144,10 +145,13 @@ def m3():
         if input1 == "1":
             m3_1()
         elif input1 == "2":
+            print(timer_data)
+ 
             return
         else:
             print("invalid input, please try again.")
             rm3_1()
+
     m3_1()
 
 
