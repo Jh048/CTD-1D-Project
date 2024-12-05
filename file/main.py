@@ -108,7 +108,7 @@ def m3():
     cooking, meditation, etc
     --------------------------
     """
-    reset_history()
+
     print(menu3)
     sel = input("Please enter your activity (e.g., 'study', 'work', 'others'): ").strip()
 
@@ -164,11 +164,13 @@ def m3():
     m3_1()
 
 def rm3():
+    global total
     sel = input("1: m3,2:quit:")
     if sel =="1":
         m3()
     elif sel == "2":
-
+        total = calculate_total_times(archive_dict)
+        print(total)
         display_time_summary(total)
         return
     else:
@@ -232,3 +234,4 @@ def start_or_archive():
 
 if __name__ == "__main__":
     m3()
+    # display_time_summary(total)

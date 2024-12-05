@@ -342,6 +342,7 @@ def calculate_total_times(archive_dict):
 
 total = calculate_total_times(archive_dict)
 def display_time_summary(total):
+    
     """
     Displays the activity-wise breakdown and total elapsed and paused times across all activities.
 
