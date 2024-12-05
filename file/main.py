@@ -2,6 +2,7 @@ from menu import *
 from timerA import *
 
 
+
 # loop = True
 # while loop:
 #     print("Welcome to Pomodoro timer!!!")
@@ -19,6 +20,12 @@ from timerA import *
 def reset_timer_flag():
     global quit_flag
     quit_flag.clear()
+
+def reset_history():
+    global archive_dict
+    archive_dict = {}  # Reset archive_dict to an empty dictionary
+
+
 
 def input_formate():
     while True:
@@ -101,7 +108,7 @@ def m3():
     cooking, meditation, etc
     --------------------------
     """
-
+    reset_history()
     print(menu3)
     sel = input("Please enter your activity (e.g., 'study', 'work', 'others'): ").strip()
 
@@ -119,7 +126,7 @@ def m3():
 
         # Pass durations to the timer
         print(f"Starting work session: {sel}")
-        reset_timer_flag()
+        # reset_timer_flag()
         time_up = timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
 
         # Check if time_up is False (i.e., the timer did not finish or was interrupted)
@@ -145,7 +152,7 @@ def m3():
         if input1 == "1":
             m3_1()
         elif input1 == "2":
-            print(timer_data)
+            
             rm3()
 
  
@@ -161,6 +168,8 @@ def rm3():
     if sel =="1":
         m3()
     elif sel == "2":
+
+        display_time_summary(total)
         return
     else:
         print("wrong input, try again")

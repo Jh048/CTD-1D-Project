@@ -5,6 +5,8 @@ import copy
 import menu as m
 import signal
 
+from datetime import timedelta
+
 
 
 timer_data = []
@@ -306,6 +308,109 @@ def data():
 
     return pomodoro_data
 
+# time_calculator.py
+
+
+def calculate_total_times(archive_dict):
+    def time_string_to_seconds(time_str):
+        hours, minutes, seconds = map(int, time_str.split(':'))
+        return timedelta(hours=hours, minutes=minutes, seconds=seconds).total_seconds()
+
+    def seconds_to_time_string(seconds):
+        return str(timedelta(seconds=seconds))
+
+    total_times = {}
+
+    for key_name, activities in archive_dict.items():
+        total_elapsed = 0
+        total_paused = 0
+        
+        for activity in activities:
+            total_elapsed += time_string_to_seconds(activity['Elapsed_time'])
+            total_paused += time_string_to_seconds(activity['Total_paused_time'])
+        
+        total_elapsed_time_str = seconds_to_time_string(total_elapsed)
+        total_paused_time_str = seconds_to_time_string(total_paused)
+        
+        total_times[key_name] = {
+            'Total Elapsed Time': total_elapsed_time_str,
+            'Total Paused Time': total_paused_time_str
+        }
+
+
+    return total_times
+
+total = calculate_total_times(archive_dict)
+def display_time_summary(total):
+    """
+    Displays the activity-wise breakdown and total elapsed and paused times across all activities.
+
+    Args:
+        total (dict): A dictionary containing aggregated times for each activity.
+
+    Returns:
+        dict: Total elapsed and paused times across all activities in HH:MM:SS format.
+    """
+    def time_string_to_seconds(time_str):
+        """Convert HH:MM:SS formatted time string to seconds."""
+        hours, minutes, seconds = map(int, time_str.split(':'))
+        return hours * 3600 + minutes * 60 + seconds
+
+    def secs_to_clock(sec):
+        """Convert seconds into HH:MM:SS format."""
+        mins, secs = divmod(sec, 60)
+        hours, mins = divmod(mins, 60)
+        return f"{hours:02}:{mins:02}:{secs:02}"
+
+    total_elapsed_time = 0
+    total_paused_time = 0
+
+    # Activity-wise breakdown
+    print("Activity-wise Breakdown:")
+    for activity, times in total.items():
+        # If 'times' is a list of dictionaries, you need to sum up the times
+        if isinstance(times, list):
+            activity_elapsed_time = 0
+            activity_paused_time = 0
+            for time_entry in times:
+                activity_elapsed_time += time_string_to_seconds(time_entry['Elapsed_time'])
+                activity_paused_time += time_string_to_seconds(time_entry['Total_paused_time'])
+
+            elapsed_time_str = secs_to_clock(activity_elapsed_time)
+            paused_time_str = secs_to_clock(activity_paused_time)
+
+            total_elapsed_time += activity_elapsed_time
+            total_paused_time += activity_paused_time
+
+            print(f"\nActivity: {activity}")
+            print(f"  Total Elapsed Time: {elapsed_time_str}")
+            print(f"  Total Paused Time: {paused_time_str}")
+
+    # Total time across all activities
+    total_elapsed_time_str = secs_to_clock(total_elapsed_time)
+    total_paused_time_str = secs_to_clock(total_paused_time)
+
+    print("\nTotal Time Across All Activities:")
+    print(f"Total Elapsed Time: {total_elapsed_time_str}")
+    print(f"Total Paused Time: {total_paused_time_str}")
+
+    # Return total times as a dictionary
+    return {
+        "Total Elapsed Time": total_elapsed_time_str,
+        "Total Paused Time": total_paused_time_str
+    }
+
+# # Example archive_dict
+# archive_dict = {
+#     'math': {'Total Elapsed Time': '00:00:10', 'Total Paused Time': '00:00:00'},
+#     'math_break': {'Total Elapsed Time': '00:00:06', 'Total Paused Time': '00:00:00'},
+#     'work': {'Total Elapsed Time': '00:00:03', 'Total Paused Time': '00:00:00'},
+#     'work_break': {'Total Elapsed Time': '00:00:05', 'Total Paused Time': '00:00:00'}
+# }
+
+
+
+
 if __name__ == "__main__":
-    timer()
+    display_time_summary(total)
 
