@@ -250,6 +250,7 @@ def m3():
                     m3()
                 else:
                     retry(m3_1_1(s))
+    m3_1()
 
 
 def rm3():
@@ -388,5 +389,5 @@ def start_or_archive():
         print ('invalid')
 
 if __name__ == "__main__":
-    m1()
+    m3()
     # display_time_summary(total)

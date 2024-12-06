@@ -2,7 +2,7 @@ import time # Used to manage delays and countdown timing in seconds.
 import threading # Enables concurrent execution of code (to run the timer and handle user inputs simultaneously).
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
-import menu as m
+from menu import *
 from datetime import timedelta
 
 
@@ -40,7 +40,7 @@ def timer(*args,title =None):
             try:
                 print()
                 print(f"Working session: {title}")
-                print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+                print(menu6)
                 time_input = input("Enter countdown time (HH,MM,SS): ").strip()
                 print()
                 print(f"Working session: {title}")
@@ -58,7 +58,7 @@ def timer(*args,title =None):
                     hours, minutes, seconds = time_parts # Interpreted as hours, minutes, and seconds.
                 else:
 
-                    print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+                    print(menu6)
                     print("Invalid input. Please enter time in the format HH,MM,SS.")
                     # If the input is invalid, it prompts the user again.
                     continue
@@ -67,7 +67,7 @@ def timer(*args,title =None):
                     # Minutes and seconds must be between 0 and 59.
                     # No component can be negative.
 
-                    print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+                    print(menu6)
                     print("Invalid time format. Ensure hours, minutes, and seconds are within limit.")
                     continue
 
@@ -84,7 +84,7 @@ def timer(*args,title =None):
         elif len(args) == 3:
             hours, minutes, seconds = args
         else:
-            print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+            print(menu6)
             print("Invalid time format. Ensure time is in the).")
             return 
     total_seconds = hours * 3600 + minutes * 60 + seconds
