@@ -31,7 +31,7 @@ Do you want to do?
 menu3 = """                    
 --------------------------
 "What do you want to do today?"
-cooking, meditation, etc
+cook, meditate, etc
 
 --------------------------
 """
@@ -74,7 +74,7 @@ Do you want to go back to the Menu?
 
 menu9 = """
 --------------------------
-Do you wish to contimue the {} timer?
+Do you wish to continue the {} timer?
 1) Yes
 2) No
 --------------------------
@@ -113,7 +113,7 @@ def edit_change(s):
 Do you want to edit {s}?
 
 1) Change Name
-2) Change time amount
+2) Change Time amount
 
 -----------------------------------------
 """)
@@ -123,6 +123,6 @@ menu9 = """
 Options:
 1) Back to home
 2) View history
-3) exit
+3) Exit
 -----------------------------------
 """
