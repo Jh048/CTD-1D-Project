@@ -3,8 +3,6 @@ import threading # Enables concurrent execution of code (to run the timer and ha
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
 import menu as m
-import signal
-
 from datetime import timedelta
 
 
@@ -17,9 +15,6 @@ archive_dict = {}
 title = None
 user_input = ""
 time_up = False
-
-
-
 
 
 
@@ -104,8 +99,6 @@ def timer(*args,title =None):
     total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
     pause_count = 0
     resume_count = 0
- 
-    
 
     def display_timer():
         
@@ -207,9 +200,7 @@ def timer(*args,title =None):
                 # Handle input interruptions
                 quit_flag.set()
                 break 
-
-
-              
+    
     timer_thread = threading.Thread(target=display_timer, daemon=True)
     # Displays the countdown.
     input_thread = threading.Thread(target=input_listener, daemon=True)
@@ -223,9 +214,6 @@ def timer(*args,title =None):
     input_thread.join()
     print(archive_dict)
     return time_up
-
-
-
     
 # Start the timer
 # Example 1: timer(5) will start a 5-second countdown
@@ -242,8 +230,8 @@ t.timer() to use i another file'''
 
 
 #=========================================================================================================
-def a():
-    print(m.menu1)
+
+
 
 def start_or_archive():
     global title
@@ -278,38 +266,7 @@ def start_or_archive():
         print ('invalid')
 
 
-
-
-
-def data():
-    global timer_data
-    # Ensure timer_data has entries before processing
-    if not timer_data:
-        print("No data available.")
-        return None
-
-    # Extract elapsed and paused times from timer_data
-    study_times = []  # For elapsed work session times
-    break_times = []  # For total paused times
-
-    for entry in timer_data:
-        # Convert the "elapsed_time" and "paused_time" strings to total minutes
-        elapsed_time = entry.get("elapsed_time", "00:00:00")
-        paused_time = entry.get("paused_time", "00:00:00")
-
-        study_times.append(secs_to_clock(elapsed_time))
-        break_times.append(secs_to_clock(paused_time))
-
-    # Build the dictionary with the summed data
-    pomodoro_data = {
-        'study': sum(study_times),  # Total study time in minutes
-        'break': sum(break_times)  # Total break time in minutes
-    }
-
-    return pomodoro_data
-
-# time_calculator.py
-
+#===================================================================================================
 
 def calculate_total_times(archive_dict):
     def time_string_to_seconds(time_str):
@@ -400,8 +357,37 @@ def convert_to_hms(seconds):
 #     'work': {'Total Elapsed Time': '00:00:03', 'Total Paused Time': '00:00:00'},
 #     'work_break': {'Total Elapsed Time': '00:00:05', 'Total Paused Time': '00:00:00'}
 # }
+#===================================================================================================
 
 
+# Shared retry data
+class Data:
+    count = 0
+    limit = 3
+    menu4 = "1. Return to previous program\n2. Exit\n"
+
+d = Data()
+
+
+def retry(previous_function): 
+    d.count += 1
+    print()
+    print("Invalid selection")
+    print(d.menu4)
+    sel = input("Please enter your choice: ")
+    if sel == "1":
+        previous_function() 
+    elif sel == "2":
+        pass
+    elif d.count >= d.limit:
+            d.count = 0
+            print()
+            print("Exiting the system due to multiple unsuccessful attempts ")
+            sys.exit()
+    else:
+        retry(previous_function)
+
+#===================================================================================================
 
 
 if __name__ == "__main__":
