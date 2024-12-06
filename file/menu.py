@@ -22,7 +22,7 @@ Do you want to start a timer?
 
 menu2 = """                    
 --------------------------
-Do you want to do?
+what do you want to do?
 1) study 
 2) work
 3) others
@@ -80,7 +80,7 @@ Do you wish to contimue the {} timer?
 --------------------------
 """
 
-def cont(s):
+def cont_menu(s):
     print(f"""
 -----------------------------------------
 Do you want to continue with {s}?
