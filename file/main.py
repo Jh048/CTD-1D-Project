@@ -86,7 +86,7 @@ def exit_option():
     print(menu9)
     sel = input("Please enter your choice: ")
     if sel == "1":
-        menu_main()
+        m()
     elif sel == "2":
         history()
     elif sel == "3":
@@ -396,5 +396,5 @@ def custom_timer_rest():
 #         print ('invalid')
 
 if __name__ == "__main__":
-    m3()
+    m()
     # display_time_summary(total)
