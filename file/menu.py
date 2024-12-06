@@ -22,13 +22,7 @@ math,cook, meditate, etc
 ------------------------------------
 """
 
-menu4 = """
-------------------------------------
-Do you want to look at your history?
-1) Yes
-2) No
-------------------------------------
-"""
+
 
 def menu6(title):
     print(f"""

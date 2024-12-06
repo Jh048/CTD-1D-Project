@@ -55,17 +55,10 @@ def ask_cont(name= None, *b):
 #==========================================================================================================================
 
 def history():
-        print(menu4)
-        sel = input("Please enter your choice: ")
-        if sel == "1":
-            total = calculate_total_times(archive_dict)
-            print(total)
-            display_time_summary(total)
-            return
-        elif sel == "2":
-            exit_option()
-        else:
-            retry(history)
+        total = calculate_total_times(archive_dict)
+        print(total)
+        display_time_summary(total)
+
 
 
 #==========================================================================================================================
