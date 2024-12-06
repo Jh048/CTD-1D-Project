@@ -3,6 +3,7 @@ import threading # Enables concurrent execution of code (to run the timer and ha
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
 from menu import *
+from definitions import *
 from datetime import timedelta
 
 
@@ -194,7 +195,7 @@ def timer(*args,title =None):
                     quit_flag.set()  # Set the quit flag to stop both threads
                     time_up = False
                 
-                    break
+                    exit_option()
 
             except EOFError:
                 # Handle input interruptions
@@ -296,6 +297,9 @@ def calculate_total_times(archive_dict):
 
     return total_times
 total = calculate_total_times(archive_dict)
+
+
+
 def display_time_summary(total):
     print("\nActivity-wise Breakdown:\n")
     for activity, time_data in total.items():
