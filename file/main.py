@@ -74,7 +74,7 @@ def exit_option():
     print(menu9)
     sel = input("Please enter your choice: ")
     if sel == "1":
-        main_menu()
+        menu_main()
     elif sel == "2":
         history()
     elif sel == "3":
@@ -278,7 +278,7 @@ def input_formate():
     while True:
         try:
             print()
-            print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+            print(menu6)
             time_input = input("Enter countdown time (HH,MM,SS): ").strip()
             print()
 
@@ -296,7 +296,7 @@ def input_formate():
                 hours, minutes, seconds = time_parts # Interpreted as hours, minutes, and seconds.
             else:
 
-                print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+                print(menu6)
                 print("Invalid input. Please enter time in the format HH,MM,SS.")
                 # If the input is invalid, it prompts the user again.
                 continue
@@ -305,7 +305,7 @@ def input_formate():
                 # Minutes and seconds must be between 0 and 59.
                 # No component can be negative.
 
-                print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
+                print(menu6)
                 print("Invalid time format. Ensure hours, minutes, and seconds are within limit.")
                 continue
             
@@ -319,7 +319,7 @@ def custom_timer_work():
     while True:
         try:
             print("Enter work duration (HH,MM,SS):")
-            time_input = input("e.g., 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec: ").strip()
+            time_input = input(menu6).strip()
             time_parts = list(map(int, time_input.split(',')))
             if len(time_parts) == 1:
                 return 0, 0, time_parts[0]  # Seconds only
@@ -338,7 +338,7 @@ def custom_timer_rest():
     while True:
         try:
             print("Enter rest duration (HH,MM,SS):")
-            time_input = input("e.g., 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec: ").strip()
+            time_input = input(menu6).strip()
             time_parts = list(map(int, time_input.split(',')))
             if len(time_parts) == 1:
                 return 0, 0, time_parts[0]  # Seconds only
