@@ -1,10 +1,11 @@
 menu1 = """
--------------------------------------
-Welcome to Pomodoro timer!!!
+------------------------
+Welcome to Tomoto timer
 1) Start a timer
 2) View history
 3) Exit
--------------------------------------
+------------------------
+
 """
 
 menu2 = """                    
@@ -64,7 +65,7 @@ Do you wish to continue the {} timer?
 def cont_menu(s):
     print(f"""
 -----------------------------------------
-Do you want to continue with {s}?
+Do you want to continue: {s}?
 
 1) Yes
 2) No
@@ -80,7 +81,7 @@ def option_m3(s):
 -----------------------------------------
 Options to continue: {s}
 
-1) Continue with the {s} time
+1) Continue with the {s} timer
 2) Edit {s} time
 3) change activity name
 

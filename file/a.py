@@ -40,7 +40,7 @@ def timer(*args,title =None):
             try:
                 print()
                 print(f"Working session: {title}")
-                print(menu6)
+                menu6(title)
                 time_input = input("Enter countdown time (HH,MM,SS): ").strip()
                 print()
                 print(f"Working session: {title}")
@@ -57,9 +57,8 @@ def timer(*args,title =None):
                 elif len(time_parts) == 3:
                     hours, minutes, seconds = time_parts # Interpreted as hours, minutes, and seconds.
                 else:
-
-                    print(menu6)
                     print("Invalid input. Please enter time in the format HH,MM,SS.")
+                    retry(timer)
                     # If the input is invalid, it prompts the user again.
                     continue
 
@@ -84,8 +83,8 @@ def timer(*args,title =None):
         elif len(args) == 3:
             hours, minutes, seconds = args
         else:
-            print(menu6)
-            print("Invalid time format. Ensure time is in the).")
+            print("Invalid input. Please enter time in the format HH,MM,SS.")
+            retry(timer)
             return 
     total_seconds = hours * 3600 + minutes * 60 + seconds
     # Converts the time into total seconds for easier countdown calculation.
@@ -96,14 +95,14 @@ def timer(*args,title =None):
     remaining_time = total_seconds #Tracks the countdown’s remaining seconds.
     paused_time = 0 # Tracks how long the timer has been paused in the current pause session.
     total_pause_time_list = []
-    total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
+
     pause_count = 0
     resume_count = 0
 
     def display_timer():
         
         global time_up
-        nonlocal remaining_time, paused_time, pause_count, resume_count, original_total_time
+        nonlocal remaining_time, paused_time, pause_count, resume_count, original_total_time, total_pause_time_list
         while remaining_time > 0:
             if quit_flag.is_set():  # If quit flag is set, break out of the loop
                 break
@@ -121,6 +120,10 @@ def timer(*args,title =None):
             sys.stdout.write("\033[K")
             sys.stdout.write("\rRemaining time: 00:00:00 | Timer completed!                           ")
             sys.stdout.write("\n")
+
+
+            # Calculate total pause time
+            total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
             paused_time_str = f"{secs_to_clock(total_pause_time)}"
             
             elapsed_time = original_total_time - remaining_time
@@ -146,7 +149,7 @@ def timer(*args,title =None):
 
     def input_listener():
         global time_up
-        nonlocal remaining_time, paused_time, pause_count, resume_count, total_pause_time_list, total_pause_time
+        nonlocal remaining_time, paused_time, pause_count, resume_count, total_pause_time_list
 
         while not quit_flag.is_set():  # Continues running unless quit_flag is set
             try:
@@ -159,15 +162,15 @@ def timer(*args,title =None):
 
                 elif user_input == "r" and not pause_flag.is_set():  # Resume the timer
                     pause_flag.set()
-                    if paused_time > 0:
-                        total_pause_time_list.append(paused_time)  # Add the paused time to the list
+
+                    total_pause_time_list.append(paused_time)  # Add the paused time to the list
                     resume_count += 1
                 elif user_input == "q":  # Quit the timer
                     
 
                     # Add the current paused time to the total pause list
-                    if not pause_flag.is_set() and paused_time > 0:
-                        total_pause_time_list.append(paused_time)
+
+                    total_pause_time_list.append(paused_time)
 
                     # Calculate total pause time
                     total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
@@ -212,7 +215,6 @@ def timer(*args,title =None):
 
     timer_thread.join()
     input_thread.join()
-    print(archive_dict)
     return time_up
 
 
@@ -265,8 +267,8 @@ def display_time_summary(total):
         [convert_to_seconds(t['Paused_time']) for t in total.values()]
     )
     print("Total Time Across All Activities:")
-    print(f"Total Elapsed Time: {convert_to_hms(total_elapsed_time)}")
-    print(f"Total Paused Time: {convert_to_hms(total_paused_time)}\n")    
+    print(f"Total Elapsed Time: {secs_to_clock(total_elapsed_time)}")
+    print(f"Total Paused Time: {secs_to_clock(total_paused_time)}\n")    
 
 
 def convert_to_seconds(hms):
@@ -282,54 +284,28 @@ def convert_to_seconds(hms):
     h, m, s = map(int, hms.split(":"))
     return h * 3600 + m * 60 + s
 
+def secs_to_clock(sec):
+    mins, secs = divmod(sec, 60)
+    hours, mins = divmod(mins, 60)
+    return f"{hours:02}:{mins:02}:{secs:02}"
 
-def convert_to_hms(seconds):
-    """
-    Convert seconds into HH:MM:SS format.
+
+# def convert_to_hms(seconds):
+#     """
+#     Convert seconds into HH:MM:SS format.
     
-    Args:
-        seconds (int): Total time in seconds.
+#     Args:
+#         seconds (int): Total time in seconds.
         
-    Returns:
-        str: Time in HH:MM:SS format.
-    """
-    h = seconds // 3600
-    m = (seconds % 3600) // 60
-    s = seconds % 60
-    return f"{h:02}:{m:02}:{s:02}"
+#     Returns:
+#         str: Time in HH:MM:SS format.
+#     """
+#     h = seconds // 3600
+#     m = (seconds % 3600) // 60
+#     s = seconds % 60
+#     return f"{h:02}:{m:02}:{s:02}"
 
 #===================================================================================================
-
-# Shared retry data
-class Data:
-    count = 0
-    limit = 3
-    menu4 = "1. Return to previous program\n2. Exit\n"
-
-d = Data()
-
-
-def retry(previous_function): 
-    d.count += 1
-    print()
-    print("Invalid selection")
-    print(d.menu4)
-    sel = input("Please enter your choice: ")
-    if sel == "1":
-        previous_function() 
-    elif sel == "2":
-        pass
-    elif d.count >= d.limit:
-            d.count = 0
-            print()
-            print("Exiting the system due to multiple unsuccessful attempts ")
-            sys.exit()
-    else:
-        retry(previous_function)
-
-#===================================================================================================
-
-
 
 def reset_timer_flag():
     global quit_flag
@@ -381,14 +357,16 @@ def ask_cont(name= None, *b):
 
 def history():
         total = calculate_total_times(archive_dict)
-        print(total)
         display_time_summary(total)
+        sel = input("Press enter to continue ")
+        exit_option()
 
 
 
 #==========================================================================================================================
                 
 def end():
+    reset_history()
     print()
     print("Goodbye and Thank you for using the system")
     sys.exit()
@@ -433,12 +411,12 @@ def m():
 
 def m2():
     """                    
-    --------------------------
-    What do you want to do?
-    1) study 
-    2) work
-    3) others
-    --------------------------
+--------------------------
+What do you want to do?
+1) study 
+2) work
+3) others
+--------------------------
     """
     print(menu2)
     sel = input("Please enter your choice: ")
@@ -464,7 +442,7 @@ def m2_1():
         time_up = timer(5,0, title = "study_break")  # Unpack the time tuple and pass it to the timer
         if time_up:
             print("Rest session completed.")
-            ask_cont(title, m2_1)
+            pass
         else:
             print("Rest session was interrupted.")
             return
@@ -515,6 +493,19 @@ def m3():
         print()
         print("Set your rest duration:")
         rest_time = custom_timer_rest(sel)
+        def edit_change(sel):
+            option_m3(sel)
+            sel1 = input("Please enter your choice: ") 
+            if sel1 == '1':
+                pass
+            elif sel1 == "2":
+                m3_1()
+            elif sel1 == "3":
+                m3()
+            else:
+                retry(edit_change(sel))
+        edit_change(sel)
+
     
 
         def m3_2():
