@@ -72,7 +72,7 @@ Do you want to go back to the Menu?
 ------------------------------------
 """
 
-menu7 = """
+menu9 = """
 --------------------------
 Do you wish to contimue the {} timer?
 1) Yes
