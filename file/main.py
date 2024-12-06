@@ -42,6 +42,18 @@ def retry(previous_function):
             sys.exit()
     else:
         retry(previous_function)
+#==========================================================================================================================
+
+def ask_cont(name= None, *b):
+    cont_menu(name)
+    sel = input("Please enter your choice: ")
+    if sel == "1":
+        b()
+    elif sel == "2":
+        exit_option()
+    else:
+        retry(ask_cont)
+
 
 #==========================================================================================================================
 
@@ -74,7 +86,7 @@ def exit_option():
     print(menu9)
     sel = input("Please enter your choice: ")
     if sel == "1":
-        main_menu()
+        m()
     elif sel == "2":
         history()
     elif sel == "3":
@@ -86,15 +98,17 @@ def exit_option():
 #==========================================================================================================================
 
 
-def m1():
+def m():
     print(menu_main)
     sel = input("Please enter your choice: ")
     if sel == "1":
         m2()
     elif sel == "2":
         history()
+    elif sel == "3":
+        end()
     else:
-        retry(m1)
+        retry(m)
 
 
 #==========================================================================================================================
@@ -117,9 +131,9 @@ def m1():
 
 
 def m2():
-    menu2 = """                    
+    """                    
     --------------------------
-    Do you want to do?
+    What do you want to do?
     1) study 
     2) work
     3) others
@@ -134,6 +148,8 @@ def m2():
         m2_2()
     elif sel == "3":
         m3()
+    else:
+        retry(m2)
 
 def m2_1():
     time_up = timer(25,0 ,title ="study")  # Unpack the time tuple and pass it to the timer
@@ -147,25 +163,14 @@ def m2_1():
         time_up = timer(5,0, title = "study_break")  # Unpack the time tuple and pass it to the timer
         if time_up:
             print("Rest session completed.")
-            rm2_1()
+            ask_cont(title, m2_1)
         else:
             print("Rest session was interrupted.")
             return
     else:
         print("Work session was interrupted.")
         return
-def rm2_1():
 
-    input1 = input("Do you want to continue the timer?")
-    if input1 == "1":
-        m2_1()
-    elif input1 == "2":
-        
-        rm3()
-        return
-    else:
-        print("invalid input, please try again.")
-        rm3_1()
     
 
 def m2_2():
@@ -180,7 +185,7 @@ def m2_2():
         time_up = timer(15,0, title = "work_break")  # Unpack the time tuple and pass it to the timer
         if time_up:
             print("Rest session completed.")
-            m2_1()
+            ask_cont(title, m2_1)
         else:
             print("Rest session was interrupted.")
             return
@@ -209,6 +214,7 @@ def m3():
         print()
         print("Set your rest duration:")
         rest_time = custom_timer_rest()
+    
 
         def m3_2():
             global time_up
@@ -226,50 +232,18 @@ def m3():
                 time_up = timer(*rest_time, title=f"{sel}_break")  # Unpack the time tuple and pass it to the timer
                 if time_up:
                     print("Rest session completed.")
-                    m3_1_1(sel)
+                    ask_cont(sel,m3_2)
                 else:
                     print("Rest session was interrupted.")
+                    exit_option()
                     return
             else:
                 print("Work session was interrupted.")
+                exit_option()
                 return
         m3_2()
-    
+    m3_1()
 
-        def m3_1_1(s):
-            cont(s)
-            input1 = input("Please enter your choice: ")
-            if input1 == "1":
-                option_m3(s)
-                sel = input("Please enter your choice: ")
-                if sel == "1":
-                    m3_2()
-                elif sel == "2":
-                    m3_1()
-                elif sel == "3":
-                    m3()
-                else:
-                    retry(m3_1_1(s))
-
-
-def rm3():
-
-    global total
-    sel = input("1: m3,2:quit:")
-    if sel =="1":
-        def change_time():
-            change_time_menu(sel)
-            sel = input()
-
-        m3()
-    elif sel == "2":
-        total = calculate_total_times(archive_dict)
-        print(total)
-        display_time_summary(total)
-        return
-    else:
-        print("wrong input, try again")
-        rm3()
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -351,42 +325,41 @@ def custom_timer_rest():
             print("Invalid input. Please enter time in HH,MM,SS format.")
 
 
-
 #==========================================================================================================================
 
 
-def start_or_archive():
-    global title
-    Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
-    if Start_or_archieve == 'y':
-        title = input ("Do you want to study,work or others?") .lower()
-        if title== "study":
-            #default timer for study
-            print (f'You have chosen {title}')
-        elif title == "work":
-            #default for study
-            print (f'You have chosen {title}')
-        elif title == "others":
-            other_activity= input ("What do you want to do today?") .lower()
-            #ask for duration function
-            print (f'You have chosen {other_activity}')
-        else:
-            print (invalid)
+# def start_or_archive():
+#     global title
+#     Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
+#     if Start_or_archieve == 'y':
+#         title = input ("Do you want to study,work or others?") .lower()
+#         if title== "study":
+#             #default timer for study
+#             print (f'You have chosen {title}')
+#         elif title == "work":
+#             #default for study
+#             print (f'You have chosen {title}')
+#         elif title == "others":
+#             other_activity= input ("What do you want to do today?") .lower()
+#             #ask for duration function
+#             print (f'You have chosen {other_activity}')
+#         else:
+#             print (invalid)
         
-        # print(f"working session: {title}")
+#         # print(f"working session: {title}")
         
-    elif title=='n':
-        Archieve= input ('Do you want to look at your history?(y/n): ').lower()
-        if Archieve == 'y':
-            print ('Loading History..........')
-            #Histroy function
-        elif Archieve == 'n':
-            print ('Bye! Have a great day!')
-        else:
-            print("incorrct input, please try again")
-    else:
-        print ('invalid')
+#     elif title=='n':
+#         Archieve= input ('Do you want to look at your history?(y/n): ').lower()
+#         if Archieve == 'y':
+#             print ('Loading History..........')
+#             #Histroy function
+#         elif Archieve == 'n':
+#             print ('Bye! Have a great day!')
+#         else:
+#             print("incorrct input, please try again")
+#     else:
+#         print ('invalid')
 
 if __name__ == "__main__":
-    m1()
+    m3()
     # display_time_summary(total)
