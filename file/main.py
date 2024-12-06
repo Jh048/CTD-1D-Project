@@ -1,24 +1,277 @@
 from menu import *
 from timerA import *
+import sys
 
 
-# loop = True
-# while loop:
-#     print("Welcome to Pomodoro timer!!!")
-#     print(menu2)
-#     sel = input("Please enter your choice: ")
 
+#==========================================================================================================================
 
-    # print("e.g. 5 = 5sec | 2,25 = 2min 25sec | 1,0,5 = 1hr 0min 5sec")
-    # time_input = input("Enter countdown time (HH,MM,SS): ").strip()
-    # print()
-    # print(f"Working session: {title}")
-    # # time_input.strip() removes leading/trailing spaces.
-
-    # time_parts = list(map(int, time_input.split(',')))
 def reset_timer_flag():
     global quit_flag
     quit_flag.clear()
+
+#==========================================================================================================================
+
+def reset_history():
+    global archive_dict
+    archive_dict = {}  # Reset archive_dict to an empty dictionary
+
+#==========================================================================================================================
+
+class Data:
+    count = 0
+    limit = 3
+    menu4 = "1. Return to previous program\n2. Exit\n"
+
+d = Data()
+
+def retry(previous_function): 
+    d.count += 1
+    print()
+    print("Invalid selection")
+    print(d.menu4)
+    sel = input("Please enter your choice: ")
+    if sel == "1":
+        previous_function() 
+    elif sel == "2":
+        pass
+    elif d.count >= d.limit:
+            d.count = 0
+            print()
+            print("Exiting the system due to multiple unsuccessful attempts ")
+            sys.exit()
+    else:
+        retry(previous_function)
+
+#==========================================================================================================================
+
+def history():
+        print(menu4)
+        sel = input("Please enter your choice: ")
+        if sel == "1":
+            total = calculate_total_times(archive_dict)
+            print(total)
+            display_time_summary(total)
+            return
+        elif sel == "2":
+            end()
+        else:
+            retry(history)
+
+
+#==========================================================================================================================
+                
+def end():
+    print()
+    print("Goodbye and Thank you for using the system")
+    sys.exit()
+
+
+#==========================================================================================================================
+
+
+def exit_option():
+    print(menu9)
+    sel = input("Please enter your choice: ")
+    if sel == "1":
+        main_menu()
+    elif sel == "2":
+        history()
+    elif sel == "3":
+        end()
+    else:
+        retry(exit_option)
+
+
+#==========================================================================================================================
+
+
+def m1():
+    print(menu_main)
+    sel = input("Please enter your choice: ")
+    if sel == "1":
+        m2()
+    elif sel == "2":
+        history()
+    else:
+        retry(m1)
+
+
+#==========================================================================================================================
+
+
+# def m1():
+#     print(menu1)
+#     sel = input("Please enter your choice: ")
+#     if sel == "1":
+#         m2()
+#     elif sel == "2":
+#         history()
+#     else:
+#         retry(m1)
+
+
+
+#==========================================================================================================================
+
+
+
+def m2():
+    menu2 = """                    
+    --------------------------
+    Do you want to do?
+    1) study 
+    2) work
+    3) others
+    --------------------------
+    """
+    print(menu2)
+    sel = input("Please enter your choice: ")
+ 
+    if sel == "1":
+        m2_1()
+    elif sel == "2":
+        m2_2()
+    elif sel == "3":
+        m3()
+
+def m2_1():
+    time_up = timer(25,0 ,title ="study")  # Unpack the time tuple and pass it to the timer
+
+    # Check if time_up is False (i.e., the timer did not finish or was interrupted)
+    if time_up:
+        print("Time's up!")
+        print("Starting rest session...")
+        reset_timer_flag()
+        
+        time_up = timer(5,0, title = "study_break")  # Unpack the time tuple and pass it to the timer
+        if time_up:
+            print("Rest session completed.")
+            rm2_1()
+        else:
+            print("Rest session was interrupted.")
+            return
+    else:
+        print("Work session was interrupted.")
+        return
+def rm2_1():
+
+    input1 = input("Do you want to continue the timer?")
+    if input1 == "1":
+        m2_1()
+    elif input1 == "2":
+        
+        rm3()
+        return
+    else:
+        print("invalid input, please try again.")
+        rm3_1()
+    
+
+def m2_2():
+    time_up = timer(45,0 ,title ="work")  # Unpack the time tuple and pass it to the timer
+
+    # Check if time_up is False (i.e., the timer did not finish or was interrupted)
+    if time_up:
+        print("Time's up!")
+        print("Starting rest session...")
+        reset_timer_flag()
+        
+        time_up = timer(15,0, title = "work_break")  # Unpack the time tuple and pass it to the timer
+        if time_up:
+            print("Rest session completed.")
+            m2_1()
+        else:
+            print("Rest session was interrupted.")
+            return
+    else:
+        print("Work session was interrupted.")
+        return
+
+
+#==========================================================================================================================
+
+
+def m3():
+    """                    
+    --------------------------
+    "What do you want to do today?"
+    cooking, meditation, etc
+    --------------------------
+    """
+    print(menu3)
+    sel = input("Please enter your activity: ").strip()
+    
+    def m3_1():
+        # Get work and rest durations
+        print("Set your work duration:")
+        work_time = custom_timer_work()
+        print()
+        print("Set your rest duration:")
+        rest_time = custom_timer_rest()
+
+        def m3_2():
+            global time_up
+            # Pass durations to the timer
+            print(f"Starting work session: {sel}")
+            # reset_timer_flag()
+            time_up = timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
+
+            # Check if time_up is False (i.e., the timer did not finish or was interrupted)
+            if time_up:
+                print(f"Time's up for {sel}")
+                print("Starting rest session...")
+                reset_timer_flag()
+                
+                time_up = timer(*rest_time, title=f"{sel}_break")  # Unpack the time tuple and pass it to the timer
+                if time_up:
+                    print("Rest session completed.")
+                    m3_1_1(sel)
+                else:
+                    print("Rest session was interrupted.")
+                    return
+            else:
+                print("Work session was interrupted.")
+                return
+        m3_2()
+    
+
+        def m3_1_1(s):
+            cont(s)
+            input1 = input("Please enter your choice: ")
+            if input1 == "1":
+                option_m3(s)
+                sel = input("Please enter your choice: ")
+                if sel == "1":
+                    m3_2()
+                elif sel == "2":
+                    m3_1()
+                elif sel == "3":
+                    m3()
+                else:
+                    retry(m3_1_1(s))
+
+
+def rm3():
+
+    global total
+    sel = input("1: m3,2:quit:")
+    if sel =="1":
+        def change_time():
+            change_time_menu(sel)
+            sel = input()
+
+        m3()
+    elif sel == "2":
+        total = calculate_total_times(archive_dict)
+        print(total)
+        display_time_summary(total)
+        return
+    else:
+        print("wrong input, try again")
+        rm3()
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 def input_formate():
     while True:
@@ -58,7 +311,8 @@ def input_formate():
             
         except ValueError:
             print("Invalid input. Please enter time in the format HH,MM,SS.")
-    
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 def custom_timer_work():
     while True:
@@ -77,6 +331,8 @@ def custom_timer_work():
         except ValueError:
             print("Invalid input. Please enter time in HH,MM,SS format.")
 
+#--------------------------------------------------------------------------------------------------------------------------
+
 def custom_timer_rest():
     while True:
         try:
@@ -94,88 +350,9 @@ def custom_timer_rest():
         except ValueError:
             print("Invalid input. Please enter time in HH,MM,SS format.")
 
-def m3():
-    """                    
-    --------------------------
-    "What do you want to do today?"
-    cooking, meditation, etc
-    --------------------------
-    """
-
-    print(menu3)
-    sel = input("Please enter your activity (e.g., 'study', 'work', 'others'): ").strip()
 
 
-    # Get work and rest durations
-    print("Set your work duration:")
-    work_time = custom_timer_work()
-    print()
-    
-    print("Set your rest duration:")
-    rest_time = custom_timer_rest()
-
-    def m3_1():
-        global time_up
-
-        # Pass durations to the timer
-        print(f"Starting work session: {sel}")
-        reset_timer_flag()
-        time_up = timer(*work_time, title=sel)  # Unpack the time tuple and pass it to the timer
-
-        # Check if time_up is False (i.e., the timer did not finish or was interrupted)
-        if time_up:
-            print("Time's up for work!")
-            print("Starting rest session...")
-            reset_timer_flag()
-            
-            time_up = timer(*rest_time, title=f"{sel}_break")  # Unpack the time tuple and pass it to the timer
-            if time_up:
-                print("Rest session completed.")
-                rm3_1()
-            else:
-                print("Rest session was interrupted.")
-                return
-        else:
-            print("Work session was interrupted.")
-            return
-    
-
-    def rm3_1():
-        input1 = input("Do you want to continue the timer?")
-        if input1 == "1":
-            m3_1()
-        elif input1 == "2":
-            print(timer_data)
- 
-            return
-        else:
-            print("invalid input, please try again.")
-            rm3_1()
-
-    m3_1()
-
-
-
-def m2():
-    print(menu2)
-    sel = input("Please enter your choice: ")
- 
-    if sel == "1":
-        timer(25,0 ,title ="study")
-        timer(5,0, title = "study_break")
-    elif sel == "2":
-        timer(45,0, title = "work")
-        timer(15,0, title = "work_break")
-    elif sel == "3":
-        m3()
-        
-
-
-def m1():
-    print(menu1)
-    if sel == "1":
-        m2()
-    
+#==========================================================================================================================
 
 
 def start_or_archive():
@@ -211,4 +388,5 @@ def start_or_archive():
         print ('invalid')
 
 if __name__ == "__main__":
-    m3()
+    m1()
+    # display_time_summary(total)

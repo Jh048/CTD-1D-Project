@@ -3,7 +3,7 @@ import threading # Enables concurrent execution of code (to run the timer and ha
 import sys # Used to manipulate the output in the terminal for updating countdown visuals.
 import copy
 import menu as m
-import signal
+from datetime import timedelta
 
 
 
@@ -15,9 +15,6 @@ archive_dict = {}
 title = None
 user_input = ""
 time_up = False
-
-
-
 
 
 
@@ -102,8 +99,6 @@ def timer(*args,title =None):
     total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
     pause_count = 0
     resume_count = 0
- 
-    
 
     def display_timer():
         
@@ -205,9 +200,7 @@ def timer(*args,title =None):
                 # Handle input interruptions
                 quit_flag.set()
                 break 
-
-
-              
+    
     timer_thread = threading.Thread(target=display_timer, daemon=True)
     # Displays the countdown.
     input_thread = threading.Thread(target=input_listener, daemon=True)
@@ -221,9 +214,6 @@ def timer(*args,title =None):
     input_thread.join()
     print(archive_dict)
     return time_up
-
-
-
     
 # Start the timer
 # Example 1: timer(5) will start a 5-second countdown
@@ -240,8 +230,8 @@ t.timer() to use i another file'''
 
 
 #=========================================================================================================
-def a():
-    print(m.menu1)
+
+
 
 def start_or_archive():
     global title
@@ -276,36 +266,132 @@ def start_or_archive():
         print ('invalid')
 
 
+#===================================================================================================
+
+def calculate_total_times(archive_dict):
+    def time_string_to_seconds(time_str):
+        hours, minutes, seconds = map(int, time_str.split(':'))
+        return timedelta(hours=hours, minutes=minutes, seconds=seconds).total_seconds()
+
+    def seconds_to_time_string(seconds):
+        return str(timedelta(seconds=seconds))
+
+    total_times = {}
+
+    for key_name, activities in archive_dict.items():
+        total_elapsed = 0
+        total_paused = 0
+        
+        for activity in activities:
+            total_elapsed += time_string_to_seconds(activity['Elapsed_time'])
+            total_paused += time_string_to_seconds(activity['Total_paused_time'])
+        
+        total_elapsed_time_str = seconds_to_time_string(total_elapsed)
+        total_paused_time_str = seconds_to_time_string(total_paused)
+        
+        total_times[key_name] = {
+            'Elapsed_time': total_elapsed_time_str,  # Match key names
+            'Paused_time': total_paused_time_str    # Match key names
+        }
+
+    return total_times
+total = calculate_total_times(archive_dict)
+def display_time_summary(total):
+    print("\nActivity-wise Breakdown:\n")
+    for activity, time_data in total.items():
+        print(f"Activity: {activity}")
+        print(f"  Total Elapsed Time: {time_data['Elapsed_time']}")
+        print(f"  Total Paused Time: {time_data['Paused_time']}\n")
+    
+    total_elapsed_time = sum(
+        [convert_to_seconds(t['Elapsed_time']) for t in total.values()]
+    )
+    total_paused_time = sum(
+        [convert_to_seconds(t['Paused_time']) for t in total.values()]
+    )
+    print("Total Time Across All Activities:")
+    print(f"Total Elapsed Time: {convert_to_hms(total_elapsed_time)}")
+    print(f"Total Paused Time: {convert_to_hms(total_paused_time)}\n")    
 
 
+def convert_to_seconds(hms):
+    """
+    Convert a time string (HH:MM:SS) into seconds.
+    
+    Args:
+        hms (str): Time in HH:MM:SS format.
+        
+    Returns:
+        int: Total time in seconds.
+    """
+    h, m, s = map(int, hms.split(":"))
+    return h * 3600 + m * 60 + s
 
-def data():
-    global timer_data
-    # Ensure timer_data has entries before processing
-    if not timer_data:
-        print("No data available.")
-        return None
 
-    # Extract elapsed and paused times from timer_data
-    study_times = []  # For elapsed work session times
-    break_times = []  # For total paused times
+def convert_to_hms(seconds):
+    """
+    Convert seconds into HH:MM:SS format.
+    
+    Args:
+        seconds (int): Total time in seconds.
+        
+    Returns:
+        str: Time in HH:MM:SS format.
+    """
+    h = seconds // 3600
+    m = (seconds % 3600) // 60
+    s = seconds % 60
+    return f"{h:02}:{m:02}:{s:02}"
 
-    for entry in timer_data:
-        # Convert the "elapsed_time" and "paused_time" strings to total minutes
-        elapsed_time = entry.get("elapsed_time", "00:00:00")
-        paused_time = entry.get("paused_time", "00:00:00")
 
-        study_times.append(secs_to_clock(elapsed_time))
-        break_times.append(secs_to_clock(paused_time))
+# Example total dictionary for testing
 
-    # Build the dictionary with the summed data
-    pomodoro_data = {
-        'study': sum(study_times),  # Total study time in minutes
-        'break': sum(break_times)  # Total break time in minutes
-    }
 
-    return pomodoro_data
+# Call the display_time_summary function with the total dictionary
+
+
+# # Example archive_dict
+# archive_dict = {
+#     'math': {'Total Elapsed Time': '00:00:10', 'Total Paused Time': '00:00:00'},
+#     'math_break': {'Total Elapsed Time': '00:00:06', 'Total Paused Time': '00:00:00'},
+#     'work': {'Total Elapsed Time': '00:00:03', 'Total Paused Time': '00:00:00'},
+#     'work_break': {'Total Elapsed Time': '00:00:05', 'Total Paused Time': '00:00:00'}
+# }
+#===================================================================================================
+
+
+# Shared retry data
+class Data:
+    count = 0
+    limit = 3
+    menu4 = "1. Return to previous program\n2. Exit\n"
+
+d = Data()
+
+
+def retry(previous_function): 
+    d.count += 1
+    print()
+    print("Invalid selection")
+    print(d.menu4)
+    sel = input("Please enter your choice: ")
+    if sel == "1":
+        previous_function() 
+    elif sel == "2":
+        pass
+    elif d.count >= d.limit:
+            d.count = 0
+            print()
+            print("Exiting the system due to multiple unsuccessful attempts ")
+            sys.exit()
+    else:
+        retry(previous_function)
+
+#===================================================================================================
+
 
 if __name__ == "__main__":
     timer()
+    total = calculate_total_times(archive_dict)
+    display_time_summary(total)
 
