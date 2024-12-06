@@ -21,20 +21,17 @@ def reset_history():
 class Data:
     count = 0
     limit = 3
-    menu4 = "1. Return to previous program\n2. Exit\n"
-
 d = Data()
 
 def retry(previous_function): 
     d.count += 1
     print()
-    print("Invalid selection")
-    print(d.menu4)
+    print(menu10)
     sel = input("Please enter your choice: ")
     if sel == "1":
         previous_function() 
     elif sel == "2":
-        pass
+        exit_option()
     elif d.count >= d.limit:
             d.count = 0
             print()
@@ -58,17 +55,10 @@ def ask_cont(name= None, *b):
 #==========================================================================================================================
 
 def history():
-        print(menu4)
-        sel = input("Please enter your choice: ")
-        if sel == "1":
-            total = calculate_total_times(archive_dict)
-            print(total)
-            display_time_summary(total)
-            return
-        elif sel == "2":
-            exit_option()
-        else:
-            retry(history)
+        total = calculate_total_times(archive_dict)
+        print(total)
+        display_time_summary(total)
+
 
 
 #==========================================================================================================================
@@ -99,7 +89,7 @@ def exit_option():
 
 
 def m():
-    print(menu_main)
+    print(menu1)
     sel = input("Please enter your choice: ")
     if sel == "1":
         m2()
@@ -210,10 +200,10 @@ def m3():
     def m3_1():
         # Get work and rest durations
         print("Set your work duration:")
-        work_time = custom_timer_work()
+        work_time = custom_timer_work(sel)
         print()
         print("Set your rest duration:")
-        rest_time = custom_timer_rest()
+        rest_time = custom_timer_rest(sel)
     
 
         def m3_2():
@@ -242,52 +232,17 @@ def m3():
                 exit_option()
                 return
         m3_2()
-    
-
-        def m3_1_1(s):
-            cont_menu(s)
-            input1 = input("Please enter your choice: ")
-            if input1 == "1":
-                option_m3(s)
-                sel = input("Please enter your choice: ")
-                if sel == "1":
-                    m3_2()
-                elif sel == "2":
-                    m3_1()
-                elif sel == "3":
-                    m3()
-                else:
-                    retry(m3_1_1(s))
     m3_1()
-
-
-def rm3():
-
-    global total
-    sel = input("1: m3,2:quit:")
-    if sel =="1":
-        def change_time():
-            change_time_menu(sel)
-            sel = input()
-
-        m3()
-    elif sel == "2":
-        total = calculate_total_times(archive_dict)
-        print(total)
-        display_time_summary(total)
-        return
-    else:
-        print("wrong input, try again")
-        rm3()
+    
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-def input_formate():
+def input_formate(title=None):
     while True:
         try:
             print()
-            print(menu6)
-            time_input = input("Enter countdown time (HH,MM,SS): ").strip()
+            menu6(title)
+            time_input = input("Please enter your choice: ").strip()
             print()
 
             # time_input.strip() removes leading/trailing spaces.
@@ -304,7 +259,7 @@ def input_formate():
                 hours, minutes, seconds = time_parts # Interpreted as hours, minutes, and seconds.
             else:
 
-                print(menu6)
+                menu6(title)
                 print("Invalid input. Please enter time in the format HH,MM,SS.")
                 # If the input is invalid, it prompts the user again.
                 continue
@@ -313,7 +268,7 @@ def input_formate():
                 # Minutes and seconds must be between 0 and 59.
                 # No component can be negative.
 
-                print(menu6)
+                menu6(title)
                 print("Invalid time format. Ensure hours, minutes, and seconds are within limit.")
                 continue
             
@@ -323,11 +278,11 @@ def input_formate():
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-def custom_timer_work():
+def custom_timer_work(sel):
     while True:
         try:
-            print("Enter work duration (HH,MM,SS):")
-            time_input = input(menu6).strip()
+            menu6(sel)
+            time_input = input("Please enter your working time: ").strip()
             time_parts = list(map(int, time_input.split(',')))
             if len(time_parts) == 1:
                 return 0, 0, time_parts[0]  # Seconds only
@@ -337,16 +292,17 @@ def custom_timer_work():
                 return time_parts  # Hours, minutes, seconds
             else:
                 print("Invalid input format. Please enter time in HH,MM,SS format.")
+                
         except ValueError:
             print("Invalid input. Please enter time in HH,MM,SS format.")
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-def custom_timer_rest():
+def custom_timer_rest(sel):
     while True:
         try:
-            print("Enter rest duration (HH,MM,SS):")
-            time_input = input(menu6).strip()
+            menu6(sel)
+            time_input = input("Please enter your resting time: ").strip()
             time_parts = list(map(int, time_input.split(',')))
             if len(time_parts) == 1:
                 return 0, 0, time_parts[0]  # Seconds only
@@ -362,38 +318,6 @@ def custom_timer_rest():
 
 #==========================================================================================================================
 
-
-# def start_or_archive():
-#     global title
-#     Start_or_archieve = input('Do you want to start a timer?(y/n): ').lower()
-#     if Start_or_archieve == 'y':
-#         title = input ("Do you want to study,work or others?") .lower()
-#         if title== "study":
-#             #default timer for study
-#             print (f'You have chosen {title}')
-#         elif title == "work":
-#             #default for study
-#             print (f'You have chosen {title}')
-#         elif title == "others":
-#             other_activity= input ("What do you want to do today?") .lower()
-#             #ask for duration function
-#             print (f'You have chosen {other_activity}')
-#         else:
-#             print (invalid)
-        
-#         # print(f"working session: {title}")
-        
-#     elif title=='n':
-#         Archieve= input ('Do you want to look at your history?(y/n): ').lower()
-#         if Archieve == 'y':
-#             print ('Loading History..........')
-#             #Histroy function
-#         elif Archieve == 'n':
-#             print ('Bye! Have a great day!')
-#         else:
-#             print("incorrct input, please try again")
-#     else:
-#         print ('invalid')
 
 if __name__ == "__main__":
     m()
