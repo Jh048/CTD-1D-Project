@@ -54,7 +54,7 @@ def history():
             display_time_summary(total)
             return
         elif sel == "2":
-            end()
+            exit_option()
         else:
             retry(history)
 
