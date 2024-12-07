@@ -65,7 +65,7 @@ Do you wish to continue the {} timer?
 def cont_menu(s):
     print(f"""
 -----------------------------------------
-Do you want to continue: {s}?
+Do you want to continue: {s}
 
 1) Yes
 2) No
