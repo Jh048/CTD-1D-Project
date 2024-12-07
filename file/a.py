@@ -123,7 +123,7 @@ def timer(*args,title =None):
 
 
             # Calculate total pause time
-            total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
+            total_pause_time = sum(total_pause_time_list) - pause_count
             paused_time_str = f"{secs_to_clock(total_pause_time)}"
             
             elapsed_time = original_total_time - remaining_time
@@ -173,7 +173,7 @@ def timer(*args,title =None):
                     total_pause_time_list.append(paused_time)
 
                     # Calculate total pause time
-                    total_pause_time = sum(total_pause_time_list) - len(total_pause_time_list)
+                    total_pause_time = sum(total_pause_time_list) - pause_count
 
                     # Calculate elapsed time
                     elapsed_time = original_total_time - remaining_time
@@ -267,27 +267,38 @@ def display_time_summary(total):
         [convert_to_seconds(t['Paused_time']) for t in total.values()]
     )
     print("Total Time Across All Activities:")
-    print(f"Total Elapsed Time: {secs_to_clock(total_elapsed_time)}")
-    print(f"Total Paused Time: {secs_to_clock(total_paused_time)}\n")    
-
+    print(f"Total Elapsed Time: {convert_to_hms(total_elapsed_time)}")
+    print(f"Total Paused Time: {convert_to_hms(total_paused_time)}\n")    
 
 def convert_to_seconds(hms):
+    try:
+        if "day" in hms:  # Handle strings like '-1 day, 23:59:59'
+            days, time = hms.split(", ")
+            days = int(days.split()[0])  # Extract the numeric part of days
+            h, m, s = map(int, time.split(":"))
+            total_seconds = days * 86400 + h * 3600 + m * 60 + s
+        else:
+            h, m, s = map(int, hms.split(":"))
+            total_seconds = h * 3600 + m * 60 + s
+        return max(0, total_seconds)  # Ensure non-negative result
+    except ValueError as e:
+        print(f"Error in convert_to_seconds: {e}")
+        return 0
+
+def convert_to_hms(seconds):
     """
-    Convert a time string (HH:MM:SS) into seconds.
+    Convert seconds into HH:MM:SS format.
     
     Args:
-        hms (str): Time in HH:MM:SS format.
+        seconds (int): Total time in seconds.
         
     Returns:
-        int: Total time in seconds.
+        str: Time in HH:MM:SS format.
     """
-    h, m, s = map(int, hms.split(":"))
-    return h * 3600 + m * 60 + s
-
-def secs_to_clock(sec):
-    mins, secs = divmod(sec, 60)
-    hours, mins = divmod(mins, 60)
-    return f"{hours:02}:{mins:02}:{secs:02}"
+    h = seconds // 3600
+    m = (seconds % 3600) // 60
+    s = seconds % 60
+    return f"{h:02}:{m:02}:{s:02}"
 
 
 # def convert_to_hms(seconds):
@@ -342,7 +353,7 @@ def retry(previous_function):
         retry(previous_function)
 #==========================================================================================================================
 
-def ask_cont(name= None, *b):
+def ask_cont(name= None, b = None):
     cont_menu(name)
     sel = input("Please enter your choice: ")
     if sel == "1":
@@ -528,11 +539,11 @@ def m3():
                 else:
                     print("Rest session was interrupted.")
                     exit_option()
-                    return
+                    
             else:
                 print("Work session was interrupted.")
                 exit_option()
-                return
+                
         m3_2()
     m3_1()
     
