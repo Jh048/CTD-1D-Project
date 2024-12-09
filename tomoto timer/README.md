@@ -29,31 +29,26 @@ Open a terminal or command prompt, navigate to the folder containing function.py
 
 python function.py
 
-
-	3.	Interactive Menu:
+    3.	Interactive Menu:
 Follow the on-screen menu prompts to select your activity, set timers, view history, or exit the program.
 
 Program Features
 
 1. Modes:
-	•	Study: Focused study sessions with 25-minute work blocks and 5-minute breaks.
-	•	Work: Work sessions with 45-minute blocks and 15-minute breaks.
-	•	Custom: Set your own durations for work and rest activities like meditation, cooking, etc.
-
+   •	Study: Focused study sessions with 25-minute work blocks and 5-minute breaks.
+   •	Work: Work sessions with 45-minute blocks and 15-minute breaks.
+   •	Custom: Set your own durations for work and rest activities like meditation, cooking, etc.
 2. Controls During Timer:
-	•	Press p to pause.
-	•	Press r to resume.
-	•	Press q to quit the current timer.
-
+   •	Press p to pause.
+   •	Press r to resume.
+   •	Press q to quit the current timer.
 3. History Tracking:
-	•	Tracks elapsed and paused time for each activity.
-	•	Provides a summary of all activities upon request.
-
+   •	Tracks elapsed and paused time for each activity.
+   •	Provides a summary of all activities upon request.
 4. Reset Options:
-	•	Clear history or start fresh.
-
+   •	Clear history or start fresh.
 5. Exit Options:
-	•	Continue, view history, or exit the program.
+   •	Continue, view history, or exit the program.
 
 Common Issues
 	1.	Input Format Error:
@@ -64,5 +59,3 @@ Common Issues
         •	Restart the program if needed.
 	3.	History Reset Warning:
         •	Resetting history will delete all previous activity data.
-
-

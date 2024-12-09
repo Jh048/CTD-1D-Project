@@ -529,11 +529,11 @@ def m3():
                     ask_cont(sel,m3_2)
                 else:
                     print("Rest session was interrupted.")
-                    exit_option()
+                    
                     
             else:
                 print("Work session was interrupted.")
-                exit_option()
+                
                 
         m3_2()
     m3_1()
@@ -625,6 +625,6 @@ def custom_timer_rest(sel):
 
 if __name__ == "__main__":
     m()
-    # display_time_summary(total)
+
 
 
