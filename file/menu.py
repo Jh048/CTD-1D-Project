@@ -11,9 +11,9 @@ Welcome to Tomoto timer
 menu2 = """                    
 --------------------------
 what do you want to do?
-1) study 
-2) work
-3) others
+1) study (default 25min,5min)
+2) work (default 45min, 15min)
+3) others (custom timer)
 --------------------------
 """
 menu3 = """                    
